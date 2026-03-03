@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import React, { useState, useEffect, useRef } from 'react';
+import { motion, AnimatePresence, useScroll, useTransform } from 'motion/react';
 import { 
   ArrowDown, 
   Shield, 
@@ -25,7 +25,8 @@ import {
   User,
   Instagram,
   Facebook,
-  Linkedin
+  Linkedin,
+  ArrowUp
 } from 'lucide-react';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
@@ -35,6 +36,27 @@ function cn(...inputs: ClassValue[]) {
 }
 
 // --- Data ---
+
+const LAWS_DATA = [
+  { 
+    title: "Pertença", 
+    law: "Todos têm o mesmo direito de pertencer.",
+    violation: "Exclusão gera compensação: um descendente repete o destino do excluído.",
+    color: "text-cyan-600"
+  },
+  { 
+    title: "Ordem", 
+    law: "Quem chegou antes tem precedência.",
+    violation: "Parentalização: quando o filho tenta salvar os pais, perde a sua força.",
+    color: "text-orange-600"
+  },
+  { 
+    title: "Equilíbrio", 
+    law: "Trocas justas entre iguais.",
+    violation: "Dar em excesso ou recusar receber bloqueia o fluxo da abundância.",
+    color: "text-pink-600"
+  }
+];
 
 // --- Components ---
 
@@ -85,6 +107,7 @@ const Navbar = ({ isScrolled, scrollToSection, isMobileMenuOpen, setIsMobileMenu
         <button 
           className="lg:hidden p-2"
           onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+          aria-label={isMobileMenuOpen ? "Fechar menu" : "Abrir menu"}
         >
           {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
@@ -117,21 +140,21 @@ const Navbar = ({ isScrolled, scrollToSection, isMobileMenuOpen, setIsMobileMenu
 };
 
 const SectionHeader = ({ title, subtitle, accent }: { title: string, subtitle: string, accent?: string }) => (
-  <div className="max-w-3xl mb-16">
+  <div className="max-w-3xl mb-24">
     <motion.div 
       initial={{ opacity: 0, x: -20 }}
       whileInView={{ opacity: 1, x: 0 }}
       viewport={{ once: true }}
-      className={cn("text-xs font-bold uppercase tracking-[0.3em] mb-4", accent || "text-accent")}
+      className={cn("text-[10px] font-bold uppercase tracking-[0.5em] mb-6", accent || "text-accent")}
     >
       {subtitle}
     </motion.div>
     <motion.h2 
-      initial={{ opacity: 0, y: 20 }}
+      initial={{ opacity: 0, y: 40 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      transition={{ delay: 0.1 }}
-      className="text-4xl md:text-5xl lg:text-6xl font-serif leading-tight"
+      transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+      className="text-5xl md:text-7xl lg:text-8xl font-serif leading-[0.9] tracking-tighter"
     >
       {title}
     </motion.h2>
@@ -141,7 +164,6 @@ const SectionHeader = ({ title, subtitle, accent }: { title: string, subtitle: s
 interface CardProps {
   children: React.ReactNode;
   className?: string;
-  key?: React.Key;
 }
 
 const Card: React.FC<CardProps> = ({ children, className }) => (
@@ -160,6 +182,22 @@ export default function App() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeLaw, setActiveLaw] = useState<number | null>(null);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+  const [newsletterStatus, setNewsletterStatus] = useState<'idle' | 'success'>('idle');
+
+  const heroRef = useRef<HTMLElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: heroRef,
+    offset: ["start start", "end start"]
+  });
+
+  const heroY = useTransform(scrollYProgress, [0, 1], [0, 200]);
+  const heroOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
+
+  const handleNewsletterSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setNewsletterStatus('success');
+    setTimeout(() => setNewsletterStatus('idle'), 5000);
+  };
 
   const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
     e.preventDefault();
@@ -168,7 +206,7 @@ export default function App() {
     if (elem) {
       const offset = 80;
       const elementPosition = elem.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + window.pageYOffset - offset;
+      const offsetPosition = elementPosition + window.scrollY - offset;
 
       window.scrollTo({
         top: offsetPosition,
@@ -196,6 +234,22 @@ export default function App() {
         isMobileMenuOpen={isMobileMenuOpen}
         setIsMobileMenuOpen={setIsMobileMenuOpen}
       />
+      
+      {/* Back to Top */}
+      <AnimatePresence>
+        {isScrolled && (
+          <motion.button
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.8 }}
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            className="fixed bottom-28 right-8 z-50 w-12 h-12 bg-white border border-ink/10 rounded-full flex items-center justify-center shadow-xl hover:bg-accent hover:text-paper transition-all"
+            aria-label="Voltar ao topo"
+          >
+            <ArrowUp size={20} />
+          </motion.button>
+        )}
+      </AnimatePresence>
       
       {/* Floating Contact Button */}
       <motion.a
@@ -246,10 +300,10 @@ export default function App() {
       </div>
 
       {/* Hero Section */}
-      <header className="relative h-screen flex items-center justify-center overflow-hidden bg-[#f5f2ed]">
+      <header ref={heroRef} className="relative h-screen flex items-center justify-center overflow-hidden bg-[#f5f2ed]">
         <motion.div 
           className="absolute inset-0 z-0 opacity-20"
-          style={{ y: isScrolled ? window.scrollY * 0.3 : 0 }}
+          style={{ y: heroY, opacity: heroOpacity }}
         >
           <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-accent rounded-full blur-[120px]" />
           <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-orange-200 rounded-full blur-[120px]" />
@@ -262,7 +316,7 @@ export default function App() {
             transition={{ duration: 0.8 }}
             className="mb-8 inline-block"
           >
-            <span className="px-4 py-1.5 rounded-full border border-accent/20 text-accent text-xs font-bold uppercase tracking-widest">
+            <span className="px-4 py-1.5 rounded-full border border-accent/20 text-accent text-[10px] font-bold uppercase tracking-[0.3em]">
               Perspectiva Sistémica
             </span>
           </motion.div>
@@ -270,8 +324,8 @@ export default function App() {
           <motion.h1 
             initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
-            className="text-6xl md:text-8xl lg:text-9xl font-serif leading-[0.9] mb-8 tracking-tighter"
+            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
+            className="text-7xl md:text-9xl lg:text-[11rem] font-serif leading-[0.85] mb-12 tracking-tighter"
           >
             O Ciclo da <br />
             <span className="italic text-accent">Desconexão</span>
@@ -281,7 +335,7 @@ export default function App() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.8, delay: 0.4 }}
-            className="text-lg md:text-xl text-muted max-w-2xl mx-auto mb-12 font-light leading-relaxed"
+            className="text-lg md:text-2xl text-muted max-w-2xl mx-auto mb-16 font-light leading-relaxed"
           >
             Partimos do sintoma visível e mergulhamos na sabedoria das leis sistémicas invisíveis, onde a cura se inicia.
           </motion.p>
@@ -290,20 +344,30 @@ export default function App() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, delay: 0.6 }}
+            className="flex flex-col md:flex-row items-center justify-center gap-8"
           >
             <a 
               href="#irresponsabilidade"
-              className="group inline-flex items-center gap-3 px-8 py-4 bg-accent text-paper rounded-full font-medium transition-all hover:bg-accent/90"
+              onClick={(e) => scrollToSection(e, '#irresponsabilidade')}
+              className="group relative px-12 py-5 bg-accent text-paper rounded-full font-bold uppercase tracking-widest text-[10px] transition-all hover:bg-ink hover:scale-105"
             >
               Iniciar Exploração
-              <ArrowDown size={18} className="group-hover:translate-y-1 transition-transform" />
+              <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-ink rounded-full flex items-center justify-center group-hover:bg-accent transition-colors">
+                <ArrowDown size={14} className="group-hover:translate-y-1 transition-transform" />
+              </div>
             </a>
           </motion.div>
         </div>
 
-        <div className="absolute bottom-12 left-1/2 -translate-x-1/2 animate-bounce opacity-30">
-          <ArrowDown size={32} />
-        </div>
+        {/* Scroll Indicator */}
+        <motion.div 
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 1.5, duration: 1 }}
+          className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3"
+        >
+          <div className="w-[1px] h-12 bg-gradient-to-b from-accent/40 to-transparent" />
+        </motion.div>
       </header>
 
       {/* 1. Sintoma */}
@@ -403,13 +467,13 @@ export default function App() {
               { title: "Não sou suficiente", axis: "Identidade", desc: "Para ser aceite, nego partes de mim. Acredito que a minha verdade é perigosa.", className: "col-span-1 md:col-span-2" },
               { title: "Não sou capaz", axis: "Capacidade", desc: "Estou fora do meu lugar. Ao carregar o peso dos antepassados, perco a minha força.", className: "col-span-1 md:col-span-2" },
               { title: "Não mereço", axis: "Merecimento", desc: "Dificuldade em acolher a vida. Se julgo o que recebi, sinto-me indigno de prosperar.", className: "col-span-1 md:col-span-4" }
-            ].map((item) => (
+            ].map((item, i) => (
               <motion.div 
                 key={item.title}
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.5 }}
+                transition={{ duration: 0.8, delay: i * 0.1, ease: [0.16, 1, 0.3, 1] }}
                 className={cn("bento-item group", item.className)}
               >
                 <div className="text-[10px] font-bold uppercase tracking-widest text-orange-500 mb-4">{item.axis}</div>
@@ -433,6 +497,20 @@ export default function App() {
           <div className="flex flex-col lg:flex-row items-center justify-center gap-20">
             {/* Interactive Diagram */}
             <div className="relative w-full max-w-[500px] aspect-square flex items-center justify-center">
+              <AnimatePresence>
+                {activeLaw === null && (
+                  <motion.div 
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="absolute inset-0 flex items-center justify-center pointer-events-none z-20"
+                  >
+                    <div className="bg-white/80 backdrop-blur-sm px-4 py-2 rounded-full border border-accent/20 text-[10px] uppercase tracking-widest font-bold text-accent animate-pulse">
+                      Clique para explorar
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
               <svg viewBox="0 0 100 100" className="w-full h-full overflow-visible">
                 {/* Connection Lines */}
                 <motion.circle cx="50" cy="50" r="40" fill="none" stroke="currentColor" strokeWidth="0.1" className="text-accent/20" />
@@ -442,16 +520,29 @@ export default function App() {
                   { id: 1, cx: 20, cy: 70, label: "Lei da Ordem" },
                   { id: 2, cx: 80, cy: 70, label: "Lei do Equilíbrio" }
                 ].map((pos) => (
-                  <motion.circle 
-                    key={pos.id}
-                    cx={pos.cx} cy={pos.cy} r="15"
-                    className={cn("cursor-pointer transition-all duration-500", activeLaw === pos.id ? "fill-accent/10" : "fill-white")}
-                    stroke="currentColor" strokeWidth="0.5"
-                    onClick={() => setActiveLaw(pos.id)}
-                    onMouseEnter={() => setActiveLaw(pos.id)}
-                    aria-label={pos.label}
-                    role="button"
-                  />
+                  <g key={pos.id}>
+                    {activeLaw === pos.id && (
+                      <motion.circle 
+                        layoutId="glow"
+                        cx={pos.cx} cy={pos.cy} r="18"
+                        className="fill-accent/20 blur-md"
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                      />
+                    )}
+                    <motion.circle 
+                      cx={pos.cx} cy={pos.cy} r="15"
+                      className={cn(
+                        "cursor-pointer transition-all duration-500", 
+                        activeLaw === pos.id ? "fill-accent/10 stroke-accent" : "fill-white stroke-ink/10"
+                      )}
+                      strokeWidth="0.5"
+                      onClick={() => setActiveLaw(pos.id)}
+                      onMouseEnter={() => setActiveLaw(pos.id)}
+                      aria-label={pos.label}
+                      role="button"
+                    />
+                  </g>
                 ))}
               </svg>
 
@@ -488,26 +579,7 @@ export default function App() {
                     className="p-12 rounded-[3rem] bg-white shadow-2xl border border-ink/5"
                   >
                     {(() => {
-                      const item = [
-                        { 
-                          title: "Pertença", 
-                          law: "Todos têm o mesmo direito de pertencer.",
-                          violation: "Exclusão gera compensação: um descendente repete o destino do excluído.",
-                          color: "text-cyan-600"
-                        },
-                        { 
-                          title: "Ordem", 
-                          law: "Quem chegou antes tem precedência.",
-                          violation: "Parentalização: quando o filho tenta salvar os pais, perde a sua força.",
-                          color: "text-orange-600"
-                        },
-                        { 
-                          title: "Equilíbrio", 
-                          law: "Trocas justas entre iguais.",
-                          violation: "Dar em excesso ou recusar receber bloqueia o fluxo da abundância.",
-                          color: "text-pink-600"
-                        }
-                      ][activeLaw];
+                      const item = LAWS_DATA[activeLaw];
                       return (
                         <div>
                           <h3 className={cn("text-4xl font-serif mb-8", item.color)}>{item.title}</h3>
@@ -591,10 +663,10 @@ export default function App() {
             ].map((item, i) => (
               <motion.div 
                 key={item.law}
-                initial={{ opacity: 0, scale: 0.9 }}
-                whileInView={{ opacity: 1, scale: 1 }}
+                initial={{ opacity: 0, y: 40 }}
+                whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: i * 0.2 }}
+                transition={{ duration: 1, delay: i * 0.2, ease: [0.16, 1, 0.3, 1] }}
                 className="relative z-10 flex flex-col gap-4"
               >
                 <div className={cn("p-10 rounded-[3rem] bg-white/5 border-2 backdrop-blur-sm h-full flex flex-col justify-center text-center", item.color)}>
@@ -645,14 +717,21 @@ export default function App() {
                   title: "Acolher", 
                   desc: "Tomar a vida como ela é, honrando o fluxo que veio antes, e agir como um adulto responsável no presente." 
                 }
-              ].map((item) => (
-                <div key={item.step} className="flex gap-8">
+              ].map((item, i) => (
+                <motion.div 
+                  key={item.step}
+                  initial={{ opacity: 0, x: 20 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.8, delay: i * 0.1 }}
+                  className="flex gap-8"
+                >
                   <div className="text-4xl font-serif text-accent/30 font-bold">{item.step}</div>
                   <div>
                     <h4 className="text-2xl font-serif mb-2">{item.title}</h4>
                     <p className="text-muted leading-relaxed">{item.desc}</p>
                   </div>
-                </div>
+                </motion.div>
               ))}
               
               <div className="pt-8">
@@ -697,22 +776,28 @@ export default function App() {
             ].map((item) => (
               <motion.div 
                 key={item.name}
-                initial={{ opacity: 0, scale: 0.9 }}
-                whileInView={{ opacity: 1, scale: 1 }}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: 0.1 }}
-                className="p-10 rounded-[3rem] bg-white border border-ink/5 shadow-sm hover:shadow-xl transition-all duration-500 flex flex-col"
+                transition={{ duration: 0.8 }}
+                className="p-12 rounded-[3rem] bg-white border border-ink/5 shadow-sm hover:shadow-2xl transition-all duration-700 flex flex-col group"
               >
-                <div className="flex gap-1 mb-6">
+                <div className="flex gap-1 mb-8 opacity-40 group-hover:opacity-100 transition-opacity">
                   {[...Array(item.stars)].map((_, i) => (
                     <Star key={i} size={14} className="fill-accent text-accent" />
                   ))}
                 </div>
-                <Quote className="text-accent/20 mb-6" size={40} />
-                <p className="text-muted italic leading-relaxed mb-8 flex-grow">"{item.text}"</p>
-                <div>
-                  <div className="font-bold text-ink">{item.name}</div>
-                  <div className="text-xs text-muted uppercase tracking-widest">{item.role}</div>
+                <p className="text-xl font-serif italic leading-relaxed mb-12 group-hover:text-accent transition-colors">
+                  "{item.text}"
+                </p>
+                <div className="mt-auto pt-8 border-t border-ink/5 flex items-center gap-4">
+                  <div className="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center text-accent font-bold text-xs">
+                    {item.name.charAt(0)}
+                  </div>
+                  <div>
+                    <h5 className="font-bold text-sm uppercase tracking-widest">{item.name}</h5>
+                    <p className="text-[10px] text-muted uppercase tracking-widest font-medium">{item.role}</p>
+                  </div>
                 </div>
               </motion.div>
             ))}
@@ -732,8 +817,8 @@ export default function App() {
             >
               <div className="aspect-[3/4] rounded-[4rem] overflow-hidden shadow-2xl">
                 <img 
-                  src="https://picsum.photos/seed/therapist/800/1200" 
-                  alt="O Terapeuta" 
+                  src="https://picsum.photos/seed/ocean/800/1200" 
+                  alt="Natureza e Mar" 
                   className="w-full h-full object-cover grayscale"
                   referrerPolicy="no-referrer"
                 />
@@ -801,9 +886,10 @@ export default function App() {
                   aria-controls={`faq-answer-${i}`}
                   className="w-full py-8 flex items-center justify-between text-left group"
                 >
-                  <span className="text-xl font-serif group-hover:text-accent transition-colors">{item.q}</span>
-                  <div className={cn("transition-transform duration-500", openFaq === i ? "rotate-180 text-accent" : "text-muted")}>
-                    <ChevronDown size={24} />
+                  <span className={cn("text-xl font-serif transition-colors", openFaq === i ? "text-accent" : "group-hover:text-accent")}>{item.q}</span>
+                  <div className={cn("w-8 h-8 rounded-full border flex items-center justify-center transition-all duration-500", 
+                    openFaq === i ? "rotate-180 bg-accent border-accent text-paper" : "border-ink/10 text-muted group-hover:border-accent group-hover:text-accent")}>
+                    <ChevronDown size={18} />
                   </div>
                 </button>
                 <AnimatePresence>
@@ -841,13 +927,13 @@ export default function App() {
                 Uma análise profunda sobre as forças invisíveis que governam as nossas dinâmicas relacionais.
               </p>
               <div className="flex gap-4">
-                <a href="#" aria-label="Instagram" className="w-10 h-10 rounded-full border border-ink/10 flex items-center justify-center hover:bg-accent hover:text-paper transition-all">
+                <a href="#!" aria-label="Instagram" className="w-10 h-10 rounded-full border border-ink/10 flex items-center justify-center hover:bg-accent hover:text-paper transition-all">
                   <Instagram size={18} />
                 </a>
-                <a href="#" aria-label="Facebook" className="w-10 h-10 rounded-full border border-ink/10 flex items-center justify-center hover:bg-accent hover:text-paper transition-all">
+                <a href="#!" aria-label="Facebook" className="w-10 h-10 rounded-full border border-ink/10 flex items-center justify-center hover:bg-accent hover:text-paper transition-all">
                   <Facebook size={18} />
                 </a>
-                <a href="#" aria-label="LinkedIn" className="w-10 h-10 rounded-full border border-ink/10 flex items-center justify-center hover:bg-accent hover:text-paper transition-all">
+                <a href="#!" aria-label="LinkedIn" className="w-10 h-10 rounded-full border border-ink/10 flex items-center justify-center hover:bg-accent hover:text-paper transition-all">
                   <Linkedin size={18} />
                 </a>
               </div>
@@ -867,7 +953,8 @@ export default function App() {
                 <h5 className="text-xs font-bold uppercase tracking-widest mb-8">Conceitos</h5>
                 <ul className="space-y-4 text-sm text-muted">
                   <li><a href="#sintese" onClick={(e) => scrollToSection(e, '#sintese')} className="hover:text-accent transition-colors">Efeito Dominó</a></li>
-                  <li><a href="#reconexao" onClick={(e) => scrollToSection(e, '#reconexao')} className="hover:text-accent transition-colors">Cura</a></li>
+                  <li><a href="#reconexao" onClick={(e) => scrollToSection(e, '#reconexao')} className="hover:text-accent transition-colors">Reconexão</a></li>
+                  <li><a href="#percurso" onClick={(e) => scrollToSection(e, '#percurso')} className="hover:text-accent transition-colors">O Meu Percurso</a></li>
                 </ul>
               </div>
             </div>
@@ -875,24 +962,52 @@ export default function App() {
             <div className="lg:col-span-4">
               <h5 className="text-xs font-bold uppercase tracking-widest mb-8">Newsletter</h5>
               <p className="text-sm text-muted mb-6">Receba insights semanais sobre visão sistémica.</p>
-              <form className="relative" onSubmit={(e) => e.preventDefault()}>
-                <input 
-                  type="email" 
-                  placeholder="O seu e-mail" 
-                  className="w-full bg-white border border-ink/10 rounded-full py-4 px-6 text-sm focus:outline-none focus:border-accent transition-colors"
-                />
-                <button className="absolute right-2 top-2 w-10 h-10 bg-accent text-paper rounded-full flex items-center justify-center hover:bg-accent/90 transition-all">
-                  <Send size={16} />
-                </button>
-              </form>
+              <AnimatePresence mode="wait">
+                {newsletterStatus === 'idle' ? (
+                  <motion.form 
+                    key="form"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    exit={{ opacity: 0 }}
+                    className="relative" 
+                    onSubmit={handleNewsletterSubmit}
+                  >
+                    <label htmlFor="newsletter-email" className="sr-only">Endereço de e-mail</label>
+                    <input 
+                      id="newsletter-email"
+                      type="email" 
+                      placeholder="O seu e-mail" 
+                      className="w-full bg-white border border-ink/10 rounded-full py-4 px-6 text-sm focus:outline-none focus:border-accent transition-colors"
+                      required
+                    />
+                    <button 
+                      type="submit"
+                      aria-label="Subscrever newsletter"
+                      className="absolute right-2 top-2 w-10 h-10 bg-accent text-paper rounded-full flex items-center justify-center hover:bg-accent/90 transition-all"
+                    >
+                      <Send size={16} />
+                    </button>
+                  </motion.form>
+                ) : (
+                  <motion.div 
+                    key="success"
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className="bg-accent/10 border border-accent/20 rounded-2xl p-4 flex items-center gap-3 text-accent"
+                  >
+                    <CheckCircle2 size={20} />
+                    <span className="text-sm font-medium">Obrigado! Inscrição confirmada.</span>
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </div>
           </div>
           
           <div className="pt-12 border-t border-ink/5 flex flex-col md:flex-row justify-between items-center gap-6 text-[10px] text-muted uppercase tracking-[0.2em]">
             <p>© 2026 Visão Sistémica. Todos os direitos reservados.</p>
             <div className="flex gap-8">
-              <a href="#" className="hover:text-accent transition-colors">Política de Privacidade</a>
-              <a href="#" className="hover:text-accent transition-colors">Termos de Utilização</a>
+              <a href="#!" className="hover:text-accent transition-colors">Política de Privacidade</a>
+              <a href="#!" className="hover:text-accent transition-colors">Termos de Utilização</a>
             </div>
           </div>
         </div>

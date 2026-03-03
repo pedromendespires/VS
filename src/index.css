@@ -78,3 +78,7 @@
 .bento-item {
   @apply p-8 rounded-[2.5rem] border border-ink/5 bg-white/50 backdrop-blur-sm transition-all duration-500 hover:shadow-2xl hover:-translate-y-1;
 }
+
+.writing-mode-vertical-rl {
+  writing-mode: vertical-rl;
+}
