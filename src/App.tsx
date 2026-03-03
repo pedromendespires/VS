@@ -626,10 +626,6 @@ export default function App() {
                   referrerPolicy="no-referrer"
                 />
               </div>
-              <div className="absolute -bottom-8 -right-8 w-48 h-48 bg-accent rounded-full flex flex-col items-center justify-center p-8 text-paper text-center font-serif italic shadow-2xl">
-                <span className="text-lg">"Sofrer é mais fácil do que agir."</span>
-                <span className="text-[10px] mt-2 not-italic font-sans uppercase tracking-widest opacity-70">Bert Hellinger</span>
-              </div>
             </div>
 
             <div className="space-y-12">
@@ -742,8 +738,9 @@ export default function App() {
                   referrerPolicy="no-referrer"
                 />
               </div>
-              <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-accent rounded-full flex items-center justify-center p-6 text-paper text-center font-serif italic text-sm shadow-xl">
-                "O meu lugar é servir à vida através da sua história."
+              <div className="absolute -bottom-10 -left-10 w-48 h-48 bg-accent rounded-full flex flex-col items-center justify-center p-8 text-paper text-center font-serif italic shadow-xl">
+                <span className="text-sm">"O meu lugar é servir à vida através da sua história."</span>
+                <span className="text-[10px] mt-2 not-italic font-sans uppercase tracking-widest opacity-70">Bert Hellinger</span>
               </div>
             </motion.div>
 
