@@ -38,25 +38,6 @@
     z-index: 100;
     filter: contrast(150%) brightness(100%);
   }
-
-  /* Hide default cursor on desktop */
-  @media (min-width: 1024px) {
-    body {
-      cursor: none;
-    }
-    a, button, [role="button"] {
-      cursor: none;
-    }
-  }
-}
-
-.custom-cursor {
-  @apply fixed top-0 left-0 w-6 h-6 bg-accent/30 rounded-full pointer-events-none z-[9999] transition-transform duration-100 ease-out;
-  mix-blend-mode: multiply;
-}
-
-.custom-cursor-dot {
-  @apply fixed top-0 left-0 w-1 h-1 bg-accent rounded-full pointer-events-none z-[9999];
 }
 
 .faq-trigger[data-state="open"] .faq-icon {

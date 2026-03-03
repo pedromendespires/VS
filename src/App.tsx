@@ -22,7 +22,10 @@ import {
   Minus,
   ChevronDown,
   ArrowRight,
-  User
+  User,
+  Instagram,
+  Facebook,
+  Linkedin
 } from 'lucide-react';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
@@ -35,16 +38,12 @@ function cn(...inputs: ClassValue[]) {
 
 // --- Components ---
 
-const Navbar = () => {
-  const [isScrolled, setIsScrolled] = useState(false);
-  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 50);
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
+const Navbar = ({ isScrolled, scrollToSection, isMobileMenuOpen, setIsMobileMenuOpen }: { 
+  isScrolled: boolean; 
+  scrollToSection: (e: React.MouseEvent<HTMLAnchorElement>, href: string) => void;
+  isMobileMenuOpen: boolean;
+  setIsMobileMenuOpen: (val: boolean) => void;
+}) => {
   const navLinks = [
     { name: 'Sintoma', href: '#irresponsabilidade' },
     { name: 'Emoção', href: '#vergonha' },
@@ -54,34 +53,18 @@ const Navbar = () => {
     { name: 'Reconexão', href: '#reconexao' },
   ];
 
-  const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
-    e.preventDefault();
-    const targetId = href.replace('#', '');
-    const elem = document.getElementById(targetId);
-    if (elem) {
-      const offset = 80; // Height of the fixed navbar
-      const bodyRect = document.body.getBoundingClientRect().top;
-      const elemRect = elem.getBoundingClientRect().top;
-      const elemPosition = elemRect - bodyRect;
-      const offsetPosition = elemPosition - offset;
-
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: 'smooth'
-      });
-    }
-    setIsMobileMenuOpen(false);
-  };
-
   return (
     <nav className={cn(
       "fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b",
       isScrolled ? "bg-paper/90 backdrop-blur-md py-3 border-ink/10" : "bg-transparent py-6 border-transparent"
     )}>
       <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 bg-accent rounded-sm flex items-center justify-center text-paper font-bold">V</div>
-          <span className="font-serif text-xl font-bold tracking-tight uppercase">Visão Sistémica</span>
+        <div 
+          className="flex items-center gap-2 cursor-pointer group"
+          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+        >
+          <div className="w-8 h-8 bg-accent rounded-sm flex items-center justify-center text-paper font-bold group-hover:bg-ink transition-colors">V</div>
+          <span className="font-serif text-xl font-bold tracking-tight uppercase group-hover:text-accent transition-colors">Visão Sistémica</span>
         </div>
 
         {/* Desktop Menu */}
@@ -175,55 +158,51 @@ const Card: React.FC<CardProps> = ({ children, className }) => (
 export default function App() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-  const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
-  const [cursorScale, setCursorScale] = useState(1);
   const [activeLaw, setActiveLaw] = useState<number | null>(null);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
 
+  const scrollToSection = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    e.preventDefault();
+    const targetId = href.replace('#', '');
+    const elem = document.getElementById(targetId);
+    if (elem) {
+      const offset = 80;
+      const elementPosition = elem.getBoundingClientRect().top;
+      const offsetPosition = elementPosition + window.pageYOffset - offset;
+
+      window.scrollTo({
+        top: offsetPosition,
+        behavior: 'smooth'
+      });
+    }
+    setIsMobileMenuOpen(false);
+  };
+
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 50);
-    const handleMouseMove = (e: MouseEvent) => {
-      setCursorPos({ x: e.clientX, y: e.clientY });
-    };
-    const handleMouseDown = () => setCursorScale(0.8);
-    const handleMouseUp = () => setCursorScale(1);
 
     window.addEventListener('scroll', handleScroll);
-    window.addEventListener('mousemove', handleMouseMove);
-    window.addEventListener('mousedown', handleMouseDown);
-    window.addEventListener('mouseup', handleMouseUp);
     
     return () => {
       window.removeEventListener('scroll', handleScroll);
-      window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('mousedown', handleMouseDown);
-      window.removeEventListener('mouseup', handleMouseUp);
     };
   }, []);
 
   return (
     <div className="min-h-screen selection:bg-accent/20">
-      {/* Custom Cursor */}
-      <div className="hidden lg:block">
-        <motion.div 
-          className="custom-cursor"
-          animate={{ x: cursorPos.x - 12, y: cursorPos.y - 12, scale: cursorScale }}
-          transition={{ type: "spring", damping: 20, stiffness: 250, mass: 0.5 }}
-        />
-        <motion.div 
-          className="custom-cursor-dot"
-          animate={{ x: cursorPos.x - 2, y: cursorPos.y - 2 }}
-          transition={{ type: "spring", damping: 30, stiffness: 400, mass: 0.2 }}
-        />
-      </div>
-
-      <Navbar />
+      <Navbar 
+        isScrolled={isScrolled} 
+        scrollToSection={scrollToSection}
+        isMobileMenuOpen={isMobileMenuOpen}
+        setIsMobileMenuOpen={setIsMobileMenuOpen}
+      />
       
       {/* Floating Contact Button */}
       <motion.a
-        href="https://wa.me/yournumber"
+        href="https://wa.me/351912345678"
         target="_blank"
         rel="noopener noreferrer"
+        aria-label="Contactar via WhatsApp"
         initial={{ scale: 0, opacity: 0 }}
         animate={{ scale: 1, opacity: 1 }}
         whileHover={{ scale: 1.1 }}
@@ -360,8 +339,8 @@ export default function App() {
                   "Digo 'Sou incapaz' para evitar liderar.",
                   "Digo 'A vida é injusta' para não partilhar.",
                   "Digo 'Falta-me algo' para não avançar."
-                ].map((item, i) => (
-                  <li key={i} className="flex items-center gap-3 text-sm text-muted">
+                ].map((item) => (
+                  <li key={item} className="flex items-center gap-3 text-sm text-muted">
                     <ChevronRight size={16} className="text-red-400" />
                     {item}
                   </li>
@@ -397,8 +376,8 @@ export default function App() {
                   { icon: <AlertCircle />, title: "Medo", desc: "De ser rejeitado ou expulso do grupo por não ser perfeito." },
                   { icon: <Zap />, title: "Raiva", desc: "Pela injustiça de ter de anular a própria essência." },
                   { icon: <CloudRain />, title: "Tristeza", desc: "Pela perda da ligação real às suas próprias raízes." }
-                ].map((item, i) => (
-                  <div key={i} className="flex flex-col items-center p-6 rounded-2xl bg-paper/50">
+                ].map((item) => (
+                  <div key={item.title} className="flex flex-col items-center p-6 rounded-2xl bg-paper/50">
                     <div className="text-pink-500 mb-4">{item.icon}</div>
                     <h4 className="font-bold mb-2">{item.title}</h4>
                     <p className="text-xs text-muted leading-relaxed">{item.desc}</p>
@@ -421,16 +400,16 @@ export default function App() {
           
           <div className="bento-grid">
             {[
-              { title: "Não sou suficiente", axis: "Identidade", desc: "Para ser aceite, nego partes de mim. Acredito que a minha verdade é perigosa.", className: "col-span-2" },
-              { title: "Não sou capaz", axis: "Capacidade", desc: "Estou fora do meu lugar. Ao carregar o peso dos antepassados, perco a minha força.", className: "col-span-2" },
-              { title: "Não mereço", axis: "Merecimento", desc: "Dificuldade em acolher a vida. Se julgo o que recebi, sinto-me indigno de prosperar.", className: "col-span-4" }
-            ].map((item, i) => (
+              { title: "Não sou suficiente", axis: "Identidade", desc: "Para ser aceite, nego partes de mim. Acredito que a minha verdade é perigosa.", className: "col-span-1 md:col-span-2" },
+              { title: "Não sou capaz", axis: "Capacidade", desc: "Estou fora do meu lugar. Ao carregar o peso dos antepassados, perco a minha força.", className: "col-span-1 md:col-span-2" },
+              { title: "Não mereço", axis: "Merecimento", desc: "Dificuldade em acolher a vida. Se julgo o que recebi, sinto-me indigno de prosperar.", className: "col-span-1 md:col-span-4" }
+            ].map((item) => (
               <motion.div 
-                key={i}
+                key={item.title}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
+                transition={{ duration: 0.5 }}
                 className={cn("bento-item group", item.className)}
               >
                 <div className="text-[10px] font-bold uppercase tracking-widest text-orange-500 mb-4">{item.axis}</div>
@@ -459,9 +438,9 @@ export default function App() {
                 <motion.circle cx="50" cy="50" r="40" fill="none" stroke="currentColor" strokeWidth="0.1" className="text-accent/20" />
                 
                 {[
-                  { id: 0, cx: 50, cy: 20, color: "text-cyan-600", bg: "bg-cyan-50" },
-                  { id: 1, cx: 20, cy: 70, color: "text-orange-600", bg: "bg-orange-50" },
-                  { id: 2, cx: 80, cy: 70, color: "text-pink-600", bg: "bg-pink-50" }
+                  { id: 0, cx: 50, cy: 20, label: "Lei da Pertença" },
+                  { id: 1, cx: 20, cy: 70, label: "Lei da Ordem" },
+                  { id: 2, cx: 80, cy: 70, label: "Lei do Equilíbrio" }
                 ].map((pos) => (
                   <motion.circle 
                     key={pos.id}
@@ -470,6 +449,8 @@ export default function App() {
                     stroke="currentColor" strokeWidth="0.5"
                     onClick={() => setActiveLaw(pos.id)}
                     onMouseEnter={() => setActiveLaw(pos.id)}
+                    aria-label={pos.label}
+                    role="button"
                   />
                 ))}
               </svg>
@@ -609,7 +590,7 @@ export default function App() {
               }
             ].map((item, i) => (
               <motion.div 
-                key={i}
+                key={item.law}
                 initial={{ opacity: 0, scale: 0.9 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
@@ -668,8 +649,8 @@ export default function App() {
                   title: "Acolher", 
                   desc: "Tomar a vida como ela é, honrando o fluxo que veio antes, e agir como um adulto responsável no presente." 
                 }
-              ].map((item, i) => (
-                <div key={i} className="flex gap-8">
+              ].map((item) => (
+                <div key={item.step} className="flex gap-8">
                   <div className="text-4xl font-serif text-accent/30 font-bold">{item.step}</div>
                   <div>
                     <h4 className="text-2xl font-serif mb-2">{item.title}</h4>
@@ -717,13 +698,13 @@ export default function App() {
                 text: "Uma ferramenta indispensável para quem quer ir à raiz dos problemas e não apenas tratar os sintomas superficiais.",
                 stars: 5
               }
-            ].map((item, i) => (
+            ].map((item) => (
               <motion.div 
-                key={i}
+                key={item.name}
                 initial={{ opacity: 0, scale: 0.9 }}
                 whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
-                transition={{ delay: i * 0.1 }}
+                transition={{ delay: 0.1 }}
                 className="p-10 rounded-[3rem] bg-white border border-ink/5 shadow-sm hover:shadow-xl transition-all duration-500 flex flex-col"
               >
                 <div className="flex gap-1 mb-6">
@@ -816,9 +797,11 @@ export default function App() {
                 a: "Se sente que repete padrões, se tem bloqueios que não consegue explicar racionalmente ou se sente um peso que parece não ser seu, a visão sistémica pode trazer a luz necessária." 
               }
             ].map((item, i) => (
-              <div key={i} className="border-b border-ink/10">
+              <div key={item.q} className="border-b border-ink/10">
                 <button 
                   onClick={() => setOpenFaq(openFaq === i ? null : i)}
+                  aria-expanded={openFaq === i}
+                  aria-controls={`faq-answer-${i}`}
                   className="w-full py-8 flex items-center justify-between text-left group"
                 >
                   <span className="text-xl font-serif group-hover:text-accent transition-colors">{item.q}</span>
@@ -829,6 +812,7 @@ export default function App() {
                 <AnimatePresence>
                   {openFaq === i && (
                     <motion.div
+                      id={`faq-answer-${i}`}
                       initial={{ height: 0, opacity: 0 }}
                       animate={{ height: "auto", opacity: 1 }}
                       exit={{ height: 0, opacity: 0 }}
@@ -849,23 +833,26 @@ export default function App() {
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 mb-24">
             <div className="lg:col-span-4">
-              <div className="flex items-center gap-2 mb-8">
-                <div className="w-8 h-8 bg-accent rounded-sm flex items-center justify-center text-paper font-bold">V</div>
-                <span className="font-serif text-xl font-bold tracking-tight uppercase">Visão Sistémica</span>
+              <div 
+                className="flex items-center gap-2 mb-8 cursor-pointer group"
+                onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+              >
+                <div className="w-8 h-8 bg-accent rounded-sm flex items-center justify-center text-paper font-bold group-hover:bg-ink transition-colors">V</div>
+                <span className="font-serif text-xl font-bold tracking-tight uppercase group-hover:text-accent transition-colors">Visão Sistémica</span>
               </div>
               <p className="text-sm text-muted leading-relaxed mb-8">
                 Uma análise profunda sobre as forças invisíveis que governam as nossas dinâmicas relacionais.
               </p>
               <div className="flex gap-4">
-                <div className="w-10 h-10 rounded-full border border-ink/10 flex items-center justify-center hover:bg-accent hover:text-paper transition-all cursor-pointer">
-                  <span className="text-xs font-bold">IG</span>
-                </div>
-                <div className="w-10 h-10 rounded-full border border-ink/10 flex items-center justify-center hover:bg-accent hover:text-paper transition-all cursor-pointer">
-                  <span className="text-xs font-bold">FB</span>
-                </div>
-                <div className="w-10 h-10 rounded-full border border-ink/10 flex items-center justify-center hover:bg-accent hover:text-paper transition-all cursor-pointer">
-                  <span className="text-xs font-bold">LI</span>
-                </div>
+                <a href="#" aria-label="Instagram" className="w-10 h-10 rounded-full border border-ink/10 flex items-center justify-center hover:bg-accent hover:text-paper transition-all">
+                  <Instagram size={18} />
+                </a>
+                <a href="#" aria-label="Facebook" className="w-10 h-10 rounded-full border border-ink/10 flex items-center justify-center hover:bg-accent hover:text-paper transition-all">
+                  <Facebook size={18} />
+                </a>
+                <a href="#" aria-label="LinkedIn" className="w-10 h-10 rounded-full border border-ink/10 flex items-center justify-center hover:bg-accent hover:text-paper transition-all">
+                  <Linkedin size={18} />
+                </a>
               </div>
             </div>
             
@@ -873,17 +860,17 @@ export default function App() {
               <div>
                 <h5 className="text-xs font-bold uppercase tracking-widest mb-8">Navegação</h5>
                 <ul className="space-y-4 text-sm text-muted">
-                  <li><a href="#irresponsabilidade" className="hover:text-accent transition-colors">Sintoma</a></li>
-                  <li><a href="#vergonha" className="hover:text-accent transition-colors">Emoção</a></li>
-                  <li><a href="#crencas" className="hover:text-accent transition-colors">Crenças</a></li>
-                  <li><a href="#leis" className="hover:text-accent transition-colors">Leis</a></li>
+                  <li><a href="#irresponsabilidade" onClick={(e) => scrollToSection(e, '#irresponsabilidade')} className="hover:text-accent transition-colors">Sintoma</a></li>
+                  <li><a href="#vergonha" onClick={(e) => scrollToSection(e, '#vergonha')} className="hover:text-accent transition-colors">Emoção</a></li>
+                  <li><a href="#crencas" onClick={(e) => scrollToSection(e, '#crencas')} className="hover:text-accent transition-colors">Crenças</a></li>
+                  <li><a href="#leis" onClick={(e) => scrollToSection(e, '#leis')} className="hover:text-accent transition-colors">Leis</a></li>
                 </ul>
               </div>
               <div>
                 <h5 className="text-xs font-bold uppercase tracking-widest mb-8">Conceitos</h5>
                 <ul className="space-y-4 text-sm text-muted">
-                  <li><a href="#sintese" className="hover:text-accent transition-colors">Efeito Dominó</a></li>
-                  <li><a href="#reconexao" className="hover:text-accent transition-colors">Cura</a></li>
+                  <li><a href="#sintese" onClick={(e) => scrollToSection(e, '#sintese')} className="hover:text-accent transition-colors">Efeito Dominó</a></li>
+                  <li><a href="#reconexao" onClick={(e) => scrollToSection(e, '#reconexao')} className="hover:text-accent transition-colors">Cura</a></li>
                 </ul>
               </div>
             </div>
@@ -891,10 +878,10 @@ export default function App() {
             <div className="lg:col-span-4">
               <h5 className="text-xs font-bold uppercase tracking-widest mb-8">Newsletter</h5>
               <p className="text-sm text-muted mb-6">Receba insights semanais sobre visão sistémica.</p>
-              <form className="relative">
+              <form className="relative" onSubmit={(e) => e.preventDefault()}>
                 <input 
                   type="email" 
-                  placeholder="O seu email" 
+                  placeholder="O seu e-mail" 
                   className="w-full bg-white border border-ink/10 rounded-full py-4 px-6 text-sm focus:outline-none focus:border-accent transition-colors"
                 />
                 <button className="absolute right-2 top-2 w-10 h-10 bg-accent text-paper rounded-full flex items-center justify-center hover:bg-accent/90 transition-all">
@@ -908,7 +895,7 @@ export default function App() {
             <p>© 2026 Visão Sistémica. Todos os direitos reservados.</p>
             <div className="flex gap-8">
               <a href="#" className="hover:text-accent transition-colors">Política de Privacidade</a>
-              <a href="#" className="hover:text-accent transition-colors">Termos de Uso</a>
+              <a href="#" className="hover:text-accent transition-colors">Termos de Utilização</a>
             </div>
           </div>
         </div>
