@@ -13,7 +13,16 @@ import {
   Menu,
   X,
   Zap,
-  Ghost
+  Ghost,
+  MessageCircle,
+  Send,
+  Quote,
+  Star,
+  Plus,
+  Minus,
+  ChevronDown,
+  ArrowRight,
+  User
 } from 'lucide-react';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
@@ -164,16 +173,108 @@ const Card: React.FC<CardProps> = ({ children, className }) => (
 );
 
 export default function App() {
+  const [isScrolled, setIsScrolled] = useState(false);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
+  const [cursorScale, setCursorScale] = useState(1);
+  const [activeLaw, setActiveLaw] = useState<number | null>(null);
+  const [openFaq, setOpenFaq] = useState<number | null>(null);
+
+  useEffect(() => {
+    const handleScroll = () => setIsScrolled(window.scrollY > 50);
+    const handleMouseMove = (e: MouseEvent) => {
+      setCursorPos({ x: e.clientX, y: e.clientY });
+    };
+    const handleMouseDown = () => setCursorScale(0.8);
+    const handleMouseUp = () => setCursorScale(1);
+
+    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('mousedown', handleMouseDown);
+    window.addEventListener('mouseup', handleMouseUp);
+    
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mousedown', handleMouseDown);
+      window.removeEventListener('mouseup', handleMouseUp);
+    };
+  }, []);
+
   return (
     <div className="min-h-screen selection:bg-accent/20">
+      {/* Custom Cursor */}
+      <div className="hidden lg:block">
+        <motion.div 
+          className="custom-cursor"
+          animate={{ x: cursorPos.x - 12, y: cursorPos.y - 12, scale: cursorScale }}
+          transition={{ type: "spring", damping: 20, stiffness: 250, mass: 0.5 }}
+        />
+        <motion.div 
+          className="custom-cursor-dot"
+          animate={{ x: cursorPos.x - 2, y: cursorPos.y - 2 }}
+          transition={{ type: "spring", damping: 30, stiffness: 400, mass: 0.2 }}
+        />
+      </div>
+
       <Navbar />
+      
+      {/* Floating Contact Button */}
+      <motion.a
+        href="https://wa.me/yournumber"
+        target="_blank"
+        rel="noopener noreferrer"
+        initial={{ scale: 0, opacity: 0 }}
+        animate={{ scale: 1, opacity: 1 }}
+        whileHover={{ scale: 1.1 }}
+        whileTap={{ scale: 0.9 }}
+        className="fixed bottom-8 right-8 z-50 w-16 h-16 bg-accent text-paper rounded-full flex items-center justify-center shadow-2xl hover:bg-accent/90 transition-all duration-300"
+      >
+        <MessageCircle size={28} />
+      </motion.a>
+
+      {/* Decorative Background Lines */}
+      <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden opacity-10">
+        <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+          <motion.path
+            d="M 0 20 Q 25 10 50 20 T 100 20"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="0.1"
+            initial={{ pathLength: 0 }}
+            animate={{ pathLength: 1 }}
+            transition={{ duration: 5, repeat: Infinity, repeatType: "reverse" }}
+          />
+          <motion.path
+            d="M 0 50 Q 25 60 50 50 T 100 50"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="0.1"
+            initial={{ pathLength: 0 }}
+            animate={{ pathLength: 1 }}
+            transition={{ duration: 7, repeat: Infinity, repeatType: "reverse", delay: 1 }}
+          />
+          <motion.path
+            d="M 0 80 Q 25 70 50 80 T 100 80"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="0.1"
+            initial={{ pathLength: 0 }}
+            animate={{ pathLength: 1 }}
+            transition={{ duration: 6, repeat: Infinity, repeatType: "reverse", delay: 2 }}
+          />
+        </svg>
+      </div>
 
       {/* Hero Section */}
       <header className="relative h-screen flex items-center justify-center overflow-hidden bg-[#f5f2ed]">
-        <div className="absolute inset-0 z-0 opacity-20">
+        <motion.div 
+          className="absolute inset-0 z-0 opacity-20"
+          style={{ y: isScrolled ? window.scrollY * 0.3 : 0 }}
+        >
           <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-accent rounded-full blur-[120px]" />
           <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-orange-200 rounded-full blur-[120px]" />
-        </div>
+        </motion.div>
         
         <div className="relative z-10 text-center px-6 max-w-5xl">
           <motion.div
@@ -318,89 +419,161 @@ export default function App() {
             accent="text-orange-600"
           />
           
-          <div className="max-w-4xl mx-auto space-y-6">
+          <div className="bento-grid">
             {[
-              { title: "Não sou suficiente", axis: "Identidade", desc: "Para ser aceite, nego partes de mim. Acredito que a minha verdade é perigosa." },
-              { title: "Não sou capaz", axis: "Capacidade", desc: "Estou fora do meu lugar. Ao carregar o peso dos antepassados, perco a minha força." },
-              { title: "Não mereço", axis: "Merecimento", desc: "Dificuldade em acolher a vida. Se julgo o que recebi, sinto-me indigno de prosperar." }
+              { title: "Não sou suficiente", axis: "Identidade", desc: "Para ser aceite, nego partes de mim. Acredito que a minha verdade é perigosa.", className: "col-span-2" },
+              { title: "Não sou capaz", axis: "Capacidade", desc: "Estou fora do meu lugar. Ao carregar o peso dos antepassados, perco a minha força.", className: "col-span-2" },
+              { title: "Não mereço", axis: "Merecimento", desc: "Dificuldade em acolher a vida. Se julgo o que recebi, sinto-me indigno de prosperar.", className: "col-span-4" }
             ].map((item, i) => (
               <motion.div 
                 key={i}
-                initial={{ opacity: 0, x: -20 }}
-                whileInView={{ opacity: 1, x: 0 }}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.1 }}
-                className="p-8 rounded-2xl border border-ink/5 hover:border-orange-200 transition-colors group bg-paper/30"
+                className={cn("bento-item group", item.className)}
               >
-                <div className="text-[10px] font-bold uppercase tracking-widest text-orange-500 mb-2">{item.axis}</div>
-                <h4 className="text-2xl font-serif mb-2 group-hover:text-orange-600 transition-colors">{item.title}</h4>
-                <p className="text-muted leading-relaxed">{item.desc}</p>
+                <div className="text-[10px] font-bold uppercase tracking-widest text-orange-500 mb-4">{item.axis}</div>
+                <h4 className="text-3xl font-serif mb-4 group-hover:text-orange-600 transition-colors">{item.title}</h4>
+                <p className="text-muted leading-relaxed text-lg">{item.desc}</p>
               </motion.div>
             ))}
           </div>
         </div>
       </section>
 
-      {/* 4. Leis do Amor */}
-      <section id="leis" className="section-padding bg-paper">
+      {/* 4. Leis do Amor - Interactive Diagram */}
+      <section id="leis" className="section-padding bg-paper relative overflow-hidden">
         <div className="max-w-7xl mx-auto">
           <SectionHeader 
             subtitle="Fase 04: A Raiz Sistémica"
             title="As Leis do Amor"
-            accent="text-cyan-600"
+            accent="text-accent"
           />
           
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-            {[
-              { 
-                icon: <Layers />, 
-                title: "Pertença", 
-                color: "text-cyan-600", 
-                bg: "bg-cyan-50",
-                law: "Todos têm o mesmo direito de pertencer.",
-                violation: "Exclusão gera compensação: um descendente repete o destino do excluído."
-              },
-              { 
-                icon: <Scale />, 
-                title: "Ordem", 
-                color: "text-orange-600", 
-                bg: "bg-orange-50",
-                law: "Quem chegou antes tem precedência.",
-                violation: "Parentalização: quando o filho tenta salvar os pais, perde a sua força."
-              },
-              { 
-                icon: <Heart />, 
-                title: "Equilíbrio", 
-                color: "text-pink-600", 
-                bg: "bg-pink-50",
-                law: "Trocas justas entre iguais.",
-                violation: "Dar em excesso ou recusar receber bloqueia o fluxo da abundância."
-              }
-            ].map((item, i) => (
-              <Card key={i} className="flex flex-col h-full">
-                <div className={cn("w-14 h-14 rounded-2xl flex items-center justify-center mb-8", item.bg, item.color)}>
-                  {item.icon}
-                </div>
-                <h3 className="text-2xl font-serif mb-6">{item.title}</h3>
-                <div className="space-y-6 flex-grow">
-                  <div>
-                    <div className="text-[10px] font-bold uppercase tracking-widest text-muted mb-2">A Lei</div>
-                    <p className="text-sm font-medium">{item.law}</p>
+          <div className="flex flex-col lg:flex-row items-center justify-center gap-20">
+            {/* Interactive Diagram */}
+            <div className="relative w-full max-w-[500px] aspect-square flex items-center justify-center">
+              <svg viewBox="0 0 100 100" className="w-full h-full overflow-visible">
+                {/* Connection Lines */}
+                <motion.circle cx="50" cy="50" r="40" fill="none" stroke="currentColor" strokeWidth="0.1" className="text-accent/20" />
+                
+                {[
+                  { id: 0, cx: 50, cy: 20, color: "text-cyan-600", bg: "bg-cyan-50" },
+                  { id: 1, cx: 20, cy: 70, color: "text-orange-600", bg: "bg-orange-50" },
+                  { id: 2, cx: 80, cy: 70, color: "text-pink-600", bg: "bg-pink-50" }
+                ].map((pos) => (
+                  <motion.circle 
+                    key={pos.id}
+                    cx={pos.cx} cy={pos.cy} r="15"
+                    className={cn("cursor-pointer transition-all duration-500", activeLaw === pos.id ? "fill-accent/10" : "fill-white")}
+                    stroke="currentColor" strokeWidth="0.5"
+                    onClick={() => setActiveLaw(pos.id)}
+                    onMouseEnter={() => setActiveLaw(pos.id)}
+                  />
+                ))}
+              </svg>
+
+              {/* Icons over circles */}
+              <div className="absolute inset-0 pointer-events-none">
+                {[
+                  { id: 0, icon: <Layers />, top: "20%", left: "50%" },
+                  { id: 1, icon: <Scale />, top: "70%", left: "20%" },
+                  { id: 2, icon: <Heart />, top: "70%", left: "80%" }
+                ].map((item) => (
+                  <div 
+                    key={item.id}
+                    className={cn(
+                      "absolute -translate-x-1/2 -translate-y-1/2 w-12 h-12 rounded-full flex items-center justify-center transition-all duration-500",
+                      activeLaw === item.id ? "scale-125 text-accent" : "text-muted"
+                    )}
+                    style={{ top: item.top, left: item.left }}
+                  >
+                    {item.icon}
                   </div>
-                  <div>
-                    <div className="text-[10px] font-bold uppercase tracking-widest text-muted mb-2">A Violação</div>
-                    <p className="text-sm text-muted leading-relaxed">{item.violation}</p>
+                ))}
+              </div>
+            </div>
+
+            {/* Content Display */}
+            <div className="w-full lg:w-1/2 min-h-[400px] flex items-center">
+              <AnimatePresence mode="wait">
+                {activeLaw !== null ? (
+                  <motion.div
+                    key={activeLaw}
+                    initial={{ opacity: 0, x: 20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    exit={{ opacity: 0, x: -20 }}
+                    className="p-12 rounded-[3rem] bg-white shadow-2xl border border-ink/5"
+                  >
+                    {(() => {
+                      const item = [
+                        { 
+                          title: "Pertença", 
+                          law: "Todos têm o mesmo direito de pertencer.",
+                          violation: "Exclusão gera compensação: um descendente repete o destino do excluído.",
+                          color: "text-cyan-600"
+                        },
+                        { 
+                          title: "Ordem", 
+                          law: "Quem chegou antes tem precedência.",
+                          violation: "Parentalização: quando o filho tenta salvar os pais, perde a sua força.",
+                          color: "text-orange-600"
+                        },
+                        { 
+                          title: "Equilíbrio", 
+                          law: "Trocas justas entre iguais.",
+                          violation: "Dar em excesso ou recusar receber bloqueia o fluxo da abundância.",
+                          color: "text-pink-600"
+                        }
+                      ][activeLaw];
+                      return (
+                        <div>
+                          <h3 className={cn("text-4xl font-serif mb-8", item.color)}>{item.title}</h3>
+                          <div className="space-y-8">
+                            <div>
+                              <div className="text-[10px] font-bold uppercase tracking-widest text-muted mb-3">A Lei Sagrada</div>
+                              <p className="text-xl font-medium leading-relaxed">{item.law}</p>
+                            </div>
+                            <div>
+                              <div className="text-[10px] font-bold uppercase tracking-widest text-muted mb-3">A Consequência da Violação</div>
+                              <p className="text-muted leading-relaxed text-lg">{item.violation}</p>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })()}
+                  </motion.div>
+                ) : (
+                  <div className="text-center w-full p-12 rounded-[3rem] border-2 border-dashed border-ink/10 flex flex-col items-center justify-center gap-6">
+                    <div className="w-16 h-16 rounded-full bg-accent/5 flex items-center justify-center text-accent">
+                      <ArrowRight size={32} className="animate-pulse" />
+                    </div>
+                    <p className="text-muted italic text-lg">Selecione uma lei no diagrama para explorar a sua profundidade.</p>
                   </div>
-                </div>
-              </Card>
-            ))}
+                )}
+              </AnimatePresence>
+            </div>
           </div>
         </div>
       </section>
 
       {/* 5. Síntese: O Efeito Dominó */}
-      <section id="sintese" className="section-padding bg-ink text-paper">
-        <div className="max-w-7xl mx-auto">
+      <section id="sintese" className="section-padding bg-ink text-paper relative overflow-hidden">
+        {/* Animated Background Flow */}
+        <div className="absolute inset-0 opacity-5 pointer-events-none">
+          <svg className="w-full h-full" viewBox="0 0 100 100" preserveAspectRatio="none">
+            <motion.path 
+              d="M 0 50 Q 50 0 100 50" 
+              fill="none" stroke="white" strokeWidth="0.5"
+              initial={{ pathLength: 0 }}
+              animate={{ pathLength: 1 }}
+              transition={{ duration: 10, repeat: Infinity }}
+            />
+          </svg>
+        </div>
+
+        <div className="max-w-7xl mx-auto relative z-10">
           <div className="text-center mb-24">
             <h2 className="text-5xl md:text-7xl font-serif mb-6">O Efeito Dominó</h2>
             <p className="text-paper/60 max-w-2xl mx-auto font-light text-lg">
@@ -409,64 +582,44 @@ export default function App() {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12 relative">
-            {/* Connecting Lines (Desktop) */}
-            <div className="hidden md:block absolute top-1/2 left-0 w-full h-px bg-paper/10 -translate-y-1/2 z-0" />
+            {/* Connecting Arrows (Desktop) */}
+            <div className="hidden md:flex absolute top-1/2 left-0 w-full justify-around -translate-y-1/2 z-0 opacity-20">
+              <ArrowRight size={48} className="text-paper" />
+              <ArrowRight size={48} className="text-paper" />
+            </div>
             
             {[
               { 
-                label: "Identidade", 
+                label: "A Raiz (Lei)", 
                 law: "Pertença", 
-                emotion: "Medo", 
-                belief: "Não sou suficiente", 
-                result: "Fuga e Isolamento",
+                desc: "A exclusão de um antepassado...",
                 color: "border-cyan-500"
               },
               { 
-                label: "Capacidade", 
-                law: "Ordem", 
-                emotion: "Tristeza", 
-                belief: "Não sou capaz", 
-                result: "A Eterna Criança",
+                label: "O Filtro (Emoção)", 
+                law: "Medo", 
+                desc: "...gera um medo inconsciente de ser rejeitado...",
                 color: "border-orange-500"
               },
               { 
-                label: "Merecimento", 
-                law: "Equilíbrio", 
-                emotion: "Raiva", 
-                belief: "Não mereço", 
-                result: "Injustiça Paralisante",
+                label: "O Fruto (Sintoma)", 
+                law: "Isolamento", 
+                desc: "...que se manifesta como isolamento na vida atual.",
                 color: "border-pink-500"
               }
             ].map((item, i) => (
               <motion.div 
                 key={i}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
                 viewport={{ once: true }}
                 transition={{ delay: i * 0.2 }}
                 className="relative z-10 flex flex-col gap-4"
               >
-                <div className={cn("p-8 rounded-[2rem] bg-white/5 border-2 backdrop-blur-sm", item.color)}>
+                <div className={cn("p-10 rounded-[3rem] bg-white/5 border-2 backdrop-blur-sm h-full flex flex-col justify-center text-center", item.color)}>
                   <div className="text-[10px] font-bold uppercase tracking-widest opacity-50 mb-6">{item.label}</div>
-                  
-                  <div className="space-y-8">
-                    <div className="flex flex-col gap-1">
-                      <span className="text-xs opacity-40">A Raiz</span>
-                      <span className="text-xl font-serif">{item.law}</span>
-                    </div>
-                    <div className="flex flex-col gap-1">
-                      <span className="text-xs opacity-40">A Emoção</span>
-                      <span className="text-xl font-serif">{item.emotion}</span>
-                    </div>
-                    <div className="flex flex-col gap-1">
-                      <span className="text-xs opacity-40">A Crença</span>
-                      <span className="text-xl font-serif italic">"{item.belief}"</span>
-                    </div>
-                    <div className="pt-6 border-t border-white/10">
-                      <span className="text-xs font-bold uppercase tracking-widest text-accent">O Bloqueio</span>
-                      <p className="mt-2 text-sm opacity-80">{item.result}</p>
-                    </div>
-                  </div>
+                  <h4 className="text-3xl font-serif mb-4">{item.law}</h4>
+                  <p className="text-paper/60 font-light italic">{item.desc}</p>
                 </div>
               </motion.div>
             ))}
@@ -535,45 +688,229 @@ export default function App() {
         </div>
       </section>
 
-      {/* Footer */}
-      <footer className="py-24 bg-paper border-t border-ink/5">
-        <div className="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-start gap-12">
-          <div className="max-w-sm">
-            <div className="flex items-center gap-2 mb-6">
-              <div className="w-8 h-8 bg-accent rounded-sm flex items-center justify-center text-paper font-bold">V</div>
-              <span className="font-serif text-xl font-bold tracking-tight uppercase">Visão Sistémica</span>
-            </div>
-            <p className="text-sm text-muted leading-relaxed">
-              Uma análise profunda sobre as forças invisíveis que governam as nossas dinâmicas relacionais.
-            </p>
-          </div>
+      {/* Testimonials */}
+      <section className="section-padding bg-paper overflow-hidden">
+        <div className="max-w-7xl mx-auto">
+          <SectionHeader 
+            subtitle="Impacto Real"
+            title="Vozes de Transformação"
+            accent="text-accent"
+          />
           
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-12">
-            <div>
-              <h5 className="text-xs font-bold uppercase tracking-widest mb-6">Navegação</h5>
-              <ul className="space-y-4 text-sm text-muted">
-                <li><a href="#irresponsabilidade" className="hover:text-accent">Sintoma</a></li>
-                <li><a href="#vergonha" className="hover:text-accent">Emoção</a></li>
-                <li><a href="#crencas" className="hover:text-accent">Crenças</a></li>
-              </ul>
-            </div>
-            <div>
-              <h5 className="text-xs font-bold uppercase tracking-widest mb-6">Conceitos</h5>
-              <ul className="space-y-4 text-sm text-muted">
-                <li><a href="#leis" className="hover:text-accent">Leis do Amor</a></li>
-                <li><a href="#sintese" className="hover:text-accent">Efeito Dominó</a></li>
-                <li><a href="#reconexao" className="hover:text-accent">Cura</a></li>
-              </ul>
-            </div>
-            <div className="col-span-2 md:col-span-1">
-              <h5 className="text-xs font-bold uppercase tracking-widest mb-6">Contacto</h5>
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {[
+              { 
+                name: "Maria Silva", 
+                role: "Empresária", 
+                text: "A visão sistémica permitiu-me compreender porque é que os meus negócios estagnavam. Ao honrar a ordem, tudo começou a fluir.",
+                stars: 5
+              },
+              { 
+                name: "João Pereira", 
+                role: "Arquiteto", 
+                text: "Recuperei a minha força como homem ao voltar ao meu lugar de filho. A minha relação com o meu pai mudou radicalmente.",
+                stars: 5
+              },
+              { 
+                name: "Ana Costa", 
+                role: "Psicóloga", 
+                text: "Uma ferramenta indispensável para quem quer ir à raiz dos problemas e não apenas tratar os sintomas superficiais.",
+                stars: 5
+              }
+            ].map((item, i) => (
+              <motion.div 
+                key={i}
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+                className="p-10 rounded-[3rem] bg-white border border-ink/5 shadow-sm hover:shadow-xl transition-all duration-500 flex flex-col"
+              >
+                <div className="flex gap-1 mb-6">
+                  {[...Array(item.stars)].map((_, i) => (
+                    <Star key={i} size={14} className="fill-accent text-accent" />
+                  ))}
+                </div>
+                <Quote className="text-accent/20 mb-6" size={40} />
+                <p className="text-muted italic leading-relaxed mb-8 flex-grow">"{item.text}"</p>
+                <div>
+                  <div className="font-bold text-ink">{item.name}</div>
+                  <div className="text-xs text-muted uppercase tracking-widest">{item.role}</div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Storytelling: O Meu Percurso */}
+      <section className="section-padding bg-white overflow-hidden">
+        <div className="max-w-7xl mx-auto">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+            <motion.div
+              initial={{ opacity: 0, x: -50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true }}
+              className="relative"
+            >
+              <div className="aspect-[3/4] rounded-[4rem] overflow-hidden shadow-2xl">
+                <img 
+                  src="https://picsum.photos/seed/therapist/800/1200" 
+                  alt="O Terapeuta" 
+                  className="w-full h-full object-cover grayscale"
+                  referrerPolicy="no-referrer"
+                />
+              </div>
+              <div className="absolute -bottom-10 -left-10 w-40 h-40 bg-accent rounded-full flex items-center justify-center p-6 text-paper text-center font-serif italic text-sm shadow-xl">
+                "O meu lugar é servir à vida através da sua história."
+              </div>
+            </motion.div>
+
+            <div className="space-y-8">
+              <div className="inline-flex items-center gap-3 text-accent mb-4">
+                <User size={20} />
+                <span className="text-xs font-bold uppercase tracking-[0.3em]">O Meu Percurso</span>
+              </div>
+              <h2 className="text-5xl md:text-6xl font-serif leading-tight">A Intenção por trás do Olhar</h2>
+              <p className="text-lg text-muted leading-relaxed">
+                Não sou eu quem cura, é a própria vida que encontra o seu caminho quando paramos de lhe resistir. O meu trabalho é facilitar o encontro entre a sua dor e a força dos seus antepassados.
+              </p>
+              <p className="text-lg text-muted leading-relaxed">
+                Após anos de estudo das leis sistémicas, compreendi que cada sintoma é um pedido de amor de alguém que foi esquecido no sistema. Ao darmos lugar a esse alguém, o sintoma pode finalmente partir.
+              </p>
+              <div className="pt-8">
+                <button className="px-10 py-5 bg-accent text-paper rounded-full font-bold uppercase text-xs tracking-widest hover:bg-accent/90 transition-all shadow-lg hover:shadow-accent/20">
+                  Agendar Consulta
+                </button>
+              </div>
             </div>
           </div>
         </div>
-        
-        <div className="max-w-7xl mx-auto px-6 mt-24 pt-8 border-t border-ink/5 flex justify-between items-center text-[10px] font-bold uppercase tracking-[0.2em] text-muted">
-          <span>© 2026 Visão Sistémica</span>
-          <span>Desenvolvido com Consciência</span>
+      </section>
+
+      {/* FAQ Section */}
+      <section className="section-padding bg-paper">
+        <div className="max-w-3xl mx-auto">
+          <SectionHeader 
+            subtitle="Dúvidas Comuns"
+            title="Esclarecer o Caminho"
+            accent="text-accent"
+          />
+          
+          <div className="space-y-4">
+            {[
+              { 
+                q: "O que é um emaranhado sistémico?", 
+                a: "É uma ligação inconsciente a um destino ou trauma de um antepassado. Quando alguém é excluído ou injustiçado no passado, um descendente pode 'repetir' esse padrão para tentar equilibrar o sistema." 
+              },
+              { 
+                q: "Preciso que a minha família esteja presente?", 
+                a: "Não. O trabalho sistémico é feito através da sua própria representação interna e campo morfológico. A mudança em si reverbera em todo o sistema, mesmo que os outros não estejam presentes." 
+              },
+              { 
+                q: "Quanto tempo dura uma sessão?", 
+                a: "Uma sessão típica dura entre 60 a 90 minutos. O foco não é o tempo, mas sim chegar ao ponto de clareza onde o movimento de cura pode começar." 
+              },
+              { 
+                q: "Como sei se este trabalho é para mim?", 
+                a: "Se sente que repete padrões, se tem bloqueios que não consegue explicar racionalmente ou se sente um peso que parece não ser seu, a visão sistémica pode trazer a luz necessária." 
+              }
+            ].map((item, i) => (
+              <div key={i} className="border-b border-ink/10">
+                <button 
+                  onClick={() => setOpenFaq(openFaq === i ? null : i)}
+                  className="w-full py-8 flex items-center justify-between text-left group"
+                >
+                  <span className="text-xl font-serif group-hover:text-accent transition-colors">{item.q}</span>
+                  <div className={cn("transition-transform duration-500", openFaq === i ? "rotate-180 text-accent" : "text-muted")}>
+                    <ChevronDown size={24} />
+                  </div>
+                </button>
+                <AnimatePresence>
+                  {openFaq === i && (
+                    <motion.div
+                      initial={{ height: 0, opacity: 0 }}
+                      animate={{ height: "auto", opacity: 1 }}
+                      exit={{ height: 0, opacity: 0 }}
+                      className="overflow-hidden"
+                    >
+                      <p className="pb-8 text-muted leading-relaxed text-lg">{item.a}</p>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="py-24 bg-paper border-t border-ink/5">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 mb-24">
+            <div className="lg:col-span-4">
+              <div className="flex items-center gap-2 mb-8">
+                <div className="w-8 h-8 bg-accent rounded-sm flex items-center justify-center text-paper font-bold">V</div>
+                <span className="font-serif text-xl font-bold tracking-tight uppercase">Visão Sistémica</span>
+              </div>
+              <p className="text-sm text-muted leading-relaxed mb-8">
+                Uma análise profunda sobre as forças invisíveis que governam as nossas dinâmicas relacionais.
+              </p>
+              <div className="flex gap-4">
+                <div className="w-10 h-10 rounded-full border border-ink/10 flex items-center justify-center hover:bg-accent hover:text-paper transition-all cursor-pointer">
+                  <span className="text-xs font-bold">IG</span>
+                </div>
+                <div className="w-10 h-10 rounded-full border border-ink/10 flex items-center justify-center hover:bg-accent hover:text-paper transition-all cursor-pointer">
+                  <span className="text-xs font-bold">FB</span>
+                </div>
+                <div className="w-10 h-10 rounded-full border border-ink/10 flex items-center justify-center hover:bg-accent hover:text-paper transition-all cursor-pointer">
+                  <span className="text-xs font-bold">LI</span>
+                </div>
+              </div>
+            </div>
+            
+            <div className="lg:col-span-4 grid grid-cols-2 gap-8">
+              <div>
+                <h5 className="text-xs font-bold uppercase tracking-widest mb-8">Navegação</h5>
+                <ul className="space-y-4 text-sm text-muted">
+                  <li><a href="#irresponsabilidade" className="hover:text-accent transition-colors">Sintoma</a></li>
+                  <li><a href="#vergonha" className="hover:text-accent transition-colors">Emoção</a></li>
+                  <li><a href="#crencas" className="hover:text-accent transition-colors">Crenças</a></li>
+                  <li><a href="#leis" className="hover:text-accent transition-colors">Leis</a></li>
+                </ul>
+              </div>
+              <div>
+                <h5 className="text-xs font-bold uppercase tracking-widest mb-8">Conceitos</h5>
+                <ul className="space-y-4 text-sm text-muted">
+                  <li><a href="#sintese" className="hover:text-accent transition-colors">Efeito Dominó</a></li>
+                  <li><a href="#reconexao" className="hover:text-accent transition-colors">Cura</a></li>
+                </ul>
+              </div>
+            </div>
+
+            <div className="lg:col-span-4">
+              <h5 className="text-xs font-bold uppercase tracking-widest mb-8">Newsletter</h5>
+              <p className="text-sm text-muted mb-6">Receba insights semanais sobre visão sistémica.</p>
+              <form className="relative">
+                <input 
+                  type="email" 
+                  placeholder="O seu email" 
+                  className="w-full bg-white border border-ink/10 rounded-full py-4 px-6 text-sm focus:outline-none focus:border-accent transition-colors"
+                />
+                <button className="absolute right-2 top-2 w-10 h-10 bg-accent text-paper rounded-full flex items-center justify-center hover:bg-accent/90 transition-all">
+                  <Send size={16} />
+                </button>
+              </form>
+            </div>
+          </div>
+          
+          <div className="pt-12 border-t border-ink/5 flex flex-col md:flex-row justify-between items-center gap-6 text-[10px] text-muted uppercase tracking-[0.2em]">
+            <p>© 2026 Visão Sistémica. Todos os direitos reservados.</p>
+            <div className="flex gap-8">
+              <a href="#" className="hover:text-accent transition-colors">Política de Privacidade</a>
+              <a href="#" className="hover:text-accent transition-colors">Termos de Uso</a>
+            </div>
+          </div>
         </div>
       </footer>
     </div>
