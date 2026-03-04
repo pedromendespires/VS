@@ -940,7 +940,7 @@ export default function App() {
                 <img 
                   src="https://picsum.photos/seed/ocean/800/1200" 
                   alt="Natureza e Mar" 
-                  className="w-full h-full object-cover grayscale"
+                  className="w-full h-full object-cover grayscale hover:grayscale-0 transition-all duration-1000"
                   referrerPolicy="no-referrer"
                 />
               </div>
