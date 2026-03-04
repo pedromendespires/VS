@@ -19,6 +19,27 @@
   body {
     @apply bg-paper text-ink font-sans antialiased relative;
   }
+
+  ::selection {
+    @apply bg-accent/20 text-ink;
+  }
+
+  /* Custom Scrollbar */
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-paper;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-ink/10 rounded-full transition-colors;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    @apply bg-accent/40;
+  }
   
   h1, h2, h3, h4, h5, h6 {
     @apply font-serif;

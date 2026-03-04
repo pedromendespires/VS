@@ -56,18 +56,25 @@ const Reveal = ({ children, delay = 0, x = 0, y = 20, className }: RevealProps) 
   </motion.div>
 );
 
-const Navbar = ({ isScrolled, scrollToSection, isMobileMenuOpen, setIsMobileMenuOpen, activeSection }: { 
+const Navbar = ({ isScrolled, scrollToSection, isMobileMenuOpen, setIsMobileMenuOpen, activeSection, scrollYProgress }: { 
   isScrolled: boolean; 
   scrollToSection: (e: React.MouseEvent<HTMLAnchorElement>, href: string) => void;
   isMobileMenuOpen: boolean;
   setIsMobileMenuOpen: (val: boolean) => void;
   activeSection: string;
+  scrollYProgress: any;
 }) => {
   return (
     <nav className={cn(
       "fixed top-0 left-0 right-0 z-50 transition-all duration-500 border-b",
       isScrolled ? "bg-paper/80 backdrop-blur-xl py-3 border-ink/5" : "bg-transparent py-6 border-transparent"
     )}>
+      {/* Scroll Progress Bar */}
+      <motion.div 
+        className="absolute top-0 left-0 right-0 h-[2px] bg-accent origin-left z-50"
+        style={{ scaleX: scrollYProgress }}
+      />
+      
       <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
         <div 
           className="flex items-center gap-3 cursor-pointer group"
@@ -199,6 +206,8 @@ export default function App() {
   });
 
   const heroY = useTransform(heroProgress, [0, 1], [0, 300]);
+  const heroTextY = useTransform(heroProgress, [0, 1], [0, -100]);
+  const heroSubtextY = useTransform(heroProgress, [0, 1], [0, -50]);
   const heroOpacity = useTransform(heroProgress, [0, 0.8], [1, 0]);
   const heroScale = useTransform(heroProgress, [0, 1], [1, 1.1]);
 
@@ -326,6 +335,7 @@ export default function App() {
         isMobileMenuOpen={isMobileMenuOpen}
         setIsMobileMenuOpen={setIsMobileMenuOpen}
         activeSection={activeSection}
+        scrollYProgress={scrollYProgress}
       />
       
       {/* Back to Top */}
@@ -388,18 +398,22 @@ export default function App() {
         </motion.div>
         
         <div className="relative z-10 text-center px-6 max-w-5xl">
-          <Reveal delay={2.4} y={40}>
-            <h1 className="text-8xl md:text-[10rem] lg:text-[13rem] font-serif leading-[0.8] mb-16 tracking-tighter">
-              A Visão <br />
-              <span className="italic text-accent">Sistémica</span>
-            </h1>
-          </Reveal>
+          <motion.div style={{ y: heroTextY }}>
+            <Reveal delay={2.4} y={40}>
+              <h1 className="text-8xl md:text-[10rem] lg:text-[13rem] font-serif leading-[0.8] mb-16 tracking-tighter">
+                A Visão <br />
+                <span className="italic text-accent">Sistémica</span>
+              </h1>
+            </Reveal>
+          </motion.div>
           
-          <Reveal delay={2.8}>
-            <p className="text-xl md:text-3xl text-muted max-w-3xl mx-auto mb-20 font-light leading-relaxed">
-              Do sintoma à raiz. Das ordens do amor à liberdade de ser quem realmente é.
-            </p>
-          </Reveal>
+          <motion.div style={{ y: heroSubtextY }}>
+            <Reveal delay={2.8}>
+              <p className="text-xl md:text-3xl text-muted max-w-3xl mx-auto mb-20 font-light leading-relaxed">
+                Do sintoma à raiz. Das ordens do amor à liberdade de ser quem realmente é.
+              </p>
+            </Reveal>
+          </motion.div>
           
           <Reveal delay={3.2} y={20}>
             <div className="flex flex-col md:flex-row items-center justify-center gap-10">
@@ -572,38 +586,41 @@ export default function App() {
                   )}
                 </AnimatePresence>
                 <svg viewBox="0 0 100 100" className="w-full h-full overflow-visible">
-                  {/* Connection Lines */}
-                  <motion.circle cx="50" cy="50" r="40" fill="none" stroke="currentColor" strokeWidth="0.1" className="text-accent/20" />
-                  
-                  {[
-                    { id: 0, cx: 50, cy: 20, label: "Lei da Pertença" },
-                    { id: 1, cx: 20, cy: 70, label: "Lei da Ordem" },
-                    { id: 2, cx: 80, cy: 70, label: "Lei do Equilíbrio" }
-                  ].map((pos) => (
-                    <g key={pos.id}>
-                      {activeLaw === pos.id && (
-                        <motion.circle 
-                          layoutId="glow"
-                          cx={pos.cx} cy={pos.cy} r="18"
-                          className="fill-accent/20 blur-md"
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                        />
-                      )}
-                      <motion.circle 
-                        cx={pos.cx} cy={pos.cy} r="15"
-                        className={cn(
-                          "cursor-pointer transition-all duration-500", 
-                          activeLaw === pos.id ? "fill-accent/10 stroke-accent" : "fill-white stroke-ink/10"
+                  <LayoutGroup>
+                    {/* Connection Lines */}
+                    <motion.circle cx="50" cy="50" r="40" fill="none" stroke="currentColor" strokeWidth="0.1" className="text-accent/20" />
+                    
+                    {[
+                      { id: 0, cx: 50, cy: 20, label: "Lei da Pertença" },
+                      { id: 1, cx: 20, cy: 70, label: "Lei da Ordem" },
+                      { id: 2, cx: 80, cy: 70, label: "Lei do Equilíbrio" }
+                    ].map((pos) => (
+                      <g key={pos.id}>
+                        {activeLaw === pos.id && (
+                          <motion.circle 
+                            layoutId="glow"
+                            cx={pos.cx} cy={pos.cy} r="22"
+                            className="fill-accent/10 blur-xl"
+                            initial={{ opacity: 0, scale: 0.8 }}
+                            animate={{ opacity: 1, scale: 1.2 }}
+                            transition={{ duration: 0.5, repeat: Infinity, repeatType: "reverse" }}
+                          />
                         )}
-                        strokeWidth="0.5"
-                        onClick={() => setActiveLaw(pos.id)}
-                        onMouseEnter={() => setActiveLaw(pos.id)}
-                        aria-label={pos.label}
-                        role="button"
-                      />
-                    </g>
-                  ))}
+                        <motion.circle 
+                          cx={pos.cx} cy={pos.cy} r="15"
+                          className={cn(
+                            "cursor-pointer transition-all duration-500", 
+                            activeLaw === pos.id ? "fill-accent/10 stroke-accent" : "fill-white stroke-ink/10"
+                          )}
+                          strokeWidth="0.5"
+                          onClick={() => setActiveLaw(pos.id)}
+                          onMouseEnter={() => setActiveLaw(pos.id)}
+                          aria-label={pos.label}
+                          role="button"
+                        />
+                      </g>
+                    ))}
+                  </LayoutGroup>
                 </svg>
 
                 {/* Icons over circles */}
@@ -705,9 +722,19 @@ export default function App() {
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-12 relative">
             {/* Connecting Arrows (Desktop) */}
-            <div className="hidden md:flex absolute top-1/2 left-0 w-full justify-around -translate-y-1/2 z-0 opacity-20">
-              <ArrowRight size={48} className="text-paper" />
-              <ArrowRight size={48} className="text-paper" />
+            <div className="hidden md:flex absolute top-1/2 left-0 w-full justify-around -translate-y-1/2 z-0 opacity-10">
+              <motion.div
+                animate={{ x: [0, 20, 0] }}
+                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+              >
+                <ArrowRight size={64} className="text-paper" />
+              </motion.div>
+              <motion.div
+                animate={{ x: [0, 20, 0] }}
+                transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", delay: 1.5 }}
+              >
+                <ArrowRight size={64} className="text-paper" />
+              </motion.div>
             </div>
             
             {[
@@ -715,26 +742,30 @@ export default function App() {
                 label: "A Raiz (Lei)", 
                 law: "Pertença", 
                 desc: "A exclusão de um antepassado...",
-                color: "border-cyan-500"
+                color: "border-cyan-500/30 bg-cyan-500/5",
+                icon: <Shield className="text-cyan-400 mb-6" size={32} />
               },
               { 
                 label: "O Filtro (Emoção)", 
                 law: "Medo", 
                 desc: "...gera um medo inconsciente de ser rejeitado...",
-                color: "border-orange-500"
+                color: "border-orange-500/30 bg-orange-500/5",
+                icon: <Zap className="text-orange-400 mb-6" size={32} />
               },
               { 
                 label: "O Fruto (Sintoma)", 
                 law: "Isolamento", 
                 desc: "...que se manifesta como isolamento na vida atual.",
-                color: "border-pink-500"
+                color: "border-pink-500/30 bg-pink-500/5",
+                icon: <Ghost className="text-pink-400 mb-6" size={32} />
               }
             ].map((item, i) => (
               <Reveal key={item.law} delay={i * 0.2} y={40}>
-                <div className={cn("p-10 rounded-[3rem] bg-white/5 border-2 backdrop-blur-sm h-full flex flex-col justify-center text-center", item.color)}>
-                  <div className="text-[10px] font-bold uppercase tracking-widest opacity-50 mb-6">{item.label}</div>
-                  <h4 className="text-3xl font-serif mb-4">{item.law}</h4>
-                  <p className="text-paper/60 font-light italic">{item.desc}</p>
+                <div className={cn("p-12 rounded-[3rem] border-2 backdrop-blur-sm h-full flex flex-col items-center text-center group hover:border-paper/20 transition-all duration-500", item.color)}>
+                  <div className="text-[10px] font-bold uppercase tracking-[0.3em] text-paper/40 mb-8">{item.label}</div>
+                  {item.icon}
+                  <h4 className="text-3xl font-serif mb-6">{item.law}</h4>
+                  <p className="text-paper/60 leading-relaxed font-light">{item.desc}</p>
                 </div>
               </Reveal>
             ))}
