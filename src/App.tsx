@@ -60,11 +60,12 @@ const LAWS_DATA = [
 
 // --- Components ---
 
-const Navbar = ({ isScrolled, scrollToSection, isMobileMenuOpen, setIsMobileMenuOpen }: { 
+const Navbar = ({ isScrolled, scrollToSection, isMobileMenuOpen, setIsMobileMenuOpen, activeSection }: { 
   isScrolled: boolean; 
   scrollToSection: (e: React.MouseEvent<HTMLAnchorElement>, href: string) => void;
   isMobileMenuOpen: boolean;
   setIsMobileMenuOpen: (val: boolean) => void;
+  activeSection: string;
 }) => {
   const navLinks = [
     { name: 'Sintoma', href: '#irresponsabilidade' },
@@ -77,28 +78,43 @@ const Navbar = ({ isScrolled, scrollToSection, isMobileMenuOpen, setIsMobileMenu
 
   return (
     <nav className={cn(
-      "fixed top-0 left-0 right-0 z-50 transition-all duration-300 border-b",
-      isScrolled ? "bg-paper/90 backdrop-blur-md py-3 border-ink/10" : "bg-transparent py-6 border-transparent"
+      "fixed top-0 left-0 right-0 z-50 transition-all duration-500 border-b",
+      isScrolled ? "bg-paper/80 backdrop-blur-xl py-3 border-ink/5" : "bg-transparent py-6 border-transparent"
     )}>
       <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
         <div 
-          className="flex items-center gap-2 cursor-pointer group"
+          className="flex items-center gap-3 cursor-pointer group"
           onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
         >
-          <div className="w-8 h-8 bg-accent rounded-sm flex items-center justify-center text-paper font-bold group-hover:bg-ink transition-colors">V</div>
-          <span className="font-serif text-xl font-bold tracking-tight uppercase group-hover:text-accent transition-colors">Visão Sistémica</span>
+          <motion.div 
+            whileHover={{ rotate: 180 }}
+            className="w-10 h-10 bg-accent rounded-full flex items-center justify-center text-paper font-bold shadow-lg group-hover:bg-ink transition-colors duration-500"
+          >
+            V
+          </motion.div>
+          <span className="font-serif text-2xl font-bold tracking-tighter group-hover:text-accent transition-colors duration-500">Visão Sistémica</span>
         </div>
 
         {/* Desktop Menu */}
-        <div className="hidden lg:flex items-center gap-8">
+        <div className="hidden lg:flex items-center gap-10">
           {navLinks.map((link) => (
             <a 
               key={link.name} 
               href={link.href}
               onClick={(e) => scrollToSection(e, link.href)}
-              className="text-sm font-medium hover:text-accent transition-colors uppercase tracking-widest"
+              className={cn(
+                "text-[10px] font-bold hover:text-accent transition-all duration-300 uppercase tracking-[0.3em] relative py-2",
+                activeSection === link.href.replace('#', '') ? "text-accent" : "text-ink/60"
+              )}
             >
               {link.name}
+              {activeSection === link.href.replace('#', '') && (
+                <motion.div 
+                  layoutId="nav-underline"
+                  className="absolute bottom-0 left-0 right-0 h-0.5 bg-accent"
+                  transition={{ type: "spring", stiffness: 380, damping: 30 }}
+                />
+              )}
             </a>
           ))}
         </div>
@@ -177,21 +193,72 @@ const Card: React.FC<CardProps> = ({ children, className }) => (
   </motion.div>
 );
 
+const CustomCursor = () => {
+  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
+  const [isHovering, setIsHovering] = useState(false);
+
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      setMousePos({ x: e.clientX, y: e.clientY });
+    };
+
+    const handleMouseOver = (e: MouseEvent) => {
+      const target = e.target as HTMLElement;
+      if (target.tagName === 'A' || target.tagName === 'BUTTON' || target.closest('button') || target.closest('a')) {
+        setIsHovering(true);
+      } else {
+        setIsHovering(false);
+      }
+    };
+
+    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener('mouseover', handleMouseOver);
+    return () => {
+      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('mouseover', handleMouseOver);
+    };
+  }, []);
+
+  return (
+    <motion.div 
+      className="fixed top-0 left-0 w-8 h-8 border border-accent rounded-full pointer-events-none z-[100] hidden lg:block"
+      animate={{ 
+        x: mousePos.x - 16, 
+        y: mousePos.y - 16,
+        scale: isHovering ? 2.5 : 1,
+        backgroundColor: isHovering ? "rgba(90, 90, 64, 0.1)" : "transparent"
+      }}
+      transition={{ type: "spring", stiffness: 500, damping: 28, mass: 0.5 }}
+    />
+  );
+};
+
 export default function App() {
+  const [isLoading, setIsLoading] = useState(true);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [activeLaw, setActiveLaw] = useState<number | null>(null);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
   const [newsletterStatus, setNewsletterStatus] = useState<'idle' | 'success'>('idle');
+  const [activeSection, setActiveSection] = useState('');
 
   const heroRef = useRef<HTMLElement>(null);
-  const { scrollYProgress } = useScroll({
+  const { scrollYProgress } = useScroll();
+  const { scrollYProgress: heroProgress } = useScroll({
     target: heroRef,
     offset: ["start start", "end start"]
   });
 
-  const heroY = useTransform(scrollYProgress, [0, 1], [0, 200]);
-  const heroOpacity = useTransform(scrollYProgress, [0, 0.8], [1, 0]);
+  const heroY = useTransform(heroProgress, [0, 1], [0, 300]);
+  const heroOpacity = useTransform(heroProgress, [0, 0.8], [1, 0]);
+  const heroScale = useTransform(heroProgress, [0, 1], [1, 1.1]);
+
+  const scaleX = useTransform(scrollYProgress, [0, 1], [0, 1]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setIsLoading(false), 2000);
+    return () => clearTimeout(timer);
+  }, []);
 
   const handleNewsletterSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -217,22 +284,79 @@ export default function App() {
   };
 
   useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY > 50);
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 50);
+      
+      // Active section detection
+      const sections = ['irresponsabilidade', 'vergonha', 'crencas', 'leis', 'sintese', 'reconexao'];
+      const current = sections.find(section => {
+        const elem = document.getElementById(section);
+        if (elem) {
+          const rect = elem.getBoundingClientRect();
+          return rect.top <= 150 && rect.bottom >= 150;
+        }
+        return false;
+      });
+      if (current) setActiveSection(current);
+    };
 
     window.addEventListener('scroll', handleScroll);
-    
-    return () => {
-      window.removeEventListener('scroll', handleScroll);
-    };
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   return (
     <div className="min-h-screen selection:bg-accent/20">
+      <AnimatePresence>
+        {isLoading && (
+          <motion.div 
+            key="loader"
+            exit={{ opacity: 0, transition: { duration: 1, ease: "easeInOut" } }}
+            className="fixed inset-0 z-[100] bg-paper flex flex-col items-center justify-center"
+          >
+            <motion.div 
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 1, ease: "easeOut" }}
+              className="flex flex-col items-center"
+            >
+              <div className="w-16 h-16 bg-accent rounded-full flex items-center justify-center text-paper font-bold text-2xl mb-6 shadow-2xl">V</div>
+              <div className="overflow-hidden">
+                <motion.span 
+                  initial={{ y: 40 }}
+                  animate={{ y: 0 }}
+                  transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
+                  className="block font-serif text-2xl tracking-tighter"
+                >
+                  Visão Sistémica
+                </motion.span>
+              </div>
+              <div className="mt-8 w-48 h-[1px] bg-ink/5 relative overflow-hidden">
+                <motion.div 
+                  initial={{ x: "-100%" }}
+                  animate={{ x: "100%" }}
+                  transition={{ duration: 1.5, repeat: Infinity, ease: "linear" }}
+                  className="absolute inset-0 bg-accent"
+                />
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+
+      <CustomCursor />
+
+      {/* Scroll Progress Bar */}
+      <motion.div 
+        className="fixed top-0 left-0 right-0 h-1 bg-accent z-[60] origin-left"
+        style={{ scaleX }}
+      />
+
       <Navbar 
         isScrolled={isScrolled} 
         scrollToSection={scrollToSection}
         isMobileMenuOpen={isMobileMenuOpen}
         setIsMobileMenuOpen={setIsMobileMenuOpen}
+        activeSection={activeSection}
       />
       
       {/* Back to Top */}
@@ -300,72 +424,89 @@ export default function App() {
       </div>
 
       {/* Hero Section */}
-      <header ref={heroRef} className="relative h-screen flex items-center justify-center overflow-hidden bg-[#f5f2ed]">
+      <header ref={heroRef} className="relative h-[110vh] flex items-center justify-center overflow-hidden bg-[#f5f2ed]">
         <motion.div 
-          className="absolute inset-0 z-0 opacity-20"
-          style={{ y: heroY, opacity: heroOpacity }}
+          className="absolute inset-0 z-0"
+          style={{ y: heroY, opacity: heroOpacity, scale: heroScale }}
         >
-          <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-accent rounded-full blur-[120px]" />
-          <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-orange-200 rounded-full blur-[120px]" />
+          <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-accent/10 rounded-full blur-[150px]" />
+          <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-orange-100 rounded-full blur-[150px]" />
         </motion.div>
         
         <div className="relative z-10 text-center px-6 max-w-5xl">
           <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.8 }}
-            className="mb-8 inline-block"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 1, delay: 2.2 }}
+            className="mb-10 inline-block"
           >
-            <span className="px-4 py-1.5 rounded-full border border-accent/20 text-accent text-[10px] font-bold uppercase tracking-[0.3em]">
-              Perspectiva Sistémica
+            <span className="px-6 py-2 rounded-full border border-accent/10 bg-white/50 backdrop-blur-sm text-accent text-[10px] font-bold uppercase tracking-[0.4em]">
+              Uma Jornada de Consciência
             </span>
           </motion.div>
           
           <motion.h1 
-            initial={{ opacity: 0, y: 30 }}
+            initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-            className="text-7xl md:text-9xl lg:text-[11rem] font-serif leading-[0.85] mb-12 tracking-tighter"
+            transition={{ duration: 1.5, delay: 2.4, ease: [0.16, 1, 0.3, 1] }}
+            className="text-8xl md:text-[10rem] lg:text-[13rem] font-serif leading-[0.8] mb-16 tracking-tighter"
           >
-            O Ciclo da <br />
-            <span className="italic text-accent">Desconexão</span>
+            A Visão <br />
+            <span className="italic text-accent">Sistémica</span>
           </motion.h1>
           
           <motion.p 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            transition={{ duration: 0.8, delay: 0.4 }}
-            className="text-lg md:text-2xl text-muted max-w-2xl mx-auto mb-16 font-light leading-relaxed"
+            transition={{ duration: 1, delay: 2.8 }}
+            className="text-xl md:text-3xl text-muted max-w-3xl mx-auto mb-20 font-light leading-relaxed"
           >
-            Partimos do sintoma visível e mergulhamos na sabedoria das leis sistémicas invisíveis, onde a cura se inicia.
+            Do sintoma à raiz. Das ordens do amor à liberdade de ser quem realmente é.
           </motion.p>
           
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, delay: 0.6 }}
-            className="flex flex-col md:flex-row items-center justify-center gap-8"
+            transition={{ duration: 1, delay: 3.2 }}
+            className="flex flex-col md:flex-row items-center justify-center gap-10"
           >
             <a 
               href="#irresponsabilidade"
               onClick={(e) => scrollToSection(e, '#irresponsabilidade')}
-              className="group relative px-12 py-5 bg-accent text-paper rounded-full font-bold uppercase tracking-widest text-[10px] transition-all hover:bg-ink hover:scale-105"
+              className="group relative px-16 py-6 bg-ink text-paper rounded-full font-bold uppercase tracking-[0.2em] text-[11px] transition-all duration-500 hover:bg-accent hover:scale-105 shadow-2xl"
             >
-              Iniciar Exploração
-              <div className="absolute -bottom-2 -right-2 w-8 h-8 bg-ink rounded-full flex items-center justify-center group-hover:bg-accent transition-colors">
-                <ArrowDown size={14} className="group-hover:translate-y-1 transition-transform" />
+              Começar a Jornada
+              <div className="absolute -bottom-3 -right-3 w-10 h-10 bg-accent rounded-full flex items-center justify-center group-hover:bg-ink transition-colors duration-500 shadow-lg">
+                <ArrowDown size={16} className="group-hover:translate-y-1 transition-transform duration-500" />
               </div>
             </a>
           </motion.div>
         </div>
 
+        {/* Floating Elements */}
+        <motion.div 
+          animate={{ y: [0, -20, 0] }}
+          transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute top-1/3 left-10 hidden xl:block opacity-20"
+        >
+          <div className="w-20 h-20 border border-accent rounded-full" />
+        </motion.div>
+        <motion.div 
+          animate={{ y: [0, 20, 0] }}
+          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+          className="absolute bottom-1/4 right-10 hidden xl:block opacity-20"
+        >
+          <div className="w-32 h-32 border border-accent rounded-full" />
+        </motion.div>
+
         {/* Scroll Indicator */}
         <motion.div 
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
-          transition={{ delay: 1.5, duration: 1 }}
+          transition={{ delay: 4, duration: 1 }}
           className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3"
         >
+          <span className="text-[8px] uppercase tracking-[0.4em] font-bold text-accent/40">Scroll</span>
           <div className="w-[1px] h-12 bg-gradient-to-b from-accent/40 to-transparent" />
         </motion.div>
       </header>
