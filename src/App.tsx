@@ -85,6 +85,8 @@ const Navbar = ({ isScrolled, scrollToSection, isMobileMenuOpen, setIsMobileMenu
         <div 
           className="flex items-center gap-3 cursor-pointer group"
           onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          role="button"
+          aria-label="Ir para o topo"
         >
           <motion.div 
             whileHover={{ rotate: 180 }}
@@ -193,46 +195,6 @@ const Card: React.FC<CardProps> = ({ children, className }) => (
   </motion.div>
 );
 
-const CustomCursor = () => {
-  const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
-  const [isHovering, setIsHovering] = useState(false);
-
-  useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      setMousePos({ x: e.clientX, y: e.clientY });
-    };
-
-    const handleMouseOver = (e: MouseEvent) => {
-      const target = e.target as HTMLElement;
-      if (target.tagName === 'A' || target.tagName === 'BUTTON' || target.closest('button') || target.closest('a')) {
-        setIsHovering(true);
-      } else {
-        setIsHovering(false);
-      }
-    };
-
-    window.addEventListener('mousemove', handleMouseMove);
-    window.addEventListener('mouseover', handleMouseOver);
-    return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
-      window.removeEventListener('mouseover', handleMouseOver);
-    };
-  }, []);
-
-  return (
-    <motion.div 
-      className="fixed top-0 left-0 w-8 h-8 border border-accent rounded-full pointer-events-none z-[100] hidden lg:block"
-      animate={{ 
-        x: mousePos.x - 16, 
-        y: mousePos.y - 16,
-        scale: isHovering ? 2.5 : 1,
-        backgroundColor: isHovering ? "rgba(90, 90, 64, 0.1)" : "transparent"
-      }}
-      transition={{ type: "spring", stiffness: 500, damping: 28, mass: 0.5 }}
-    />
-  );
-};
-
 export default function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [isScrolled, setIsScrolled] = useState(false);
@@ -288,20 +250,41 @@ export default function App() {
       setIsScrolled(window.scrollY > 50);
       
       // Active section detection
-      const sections = ['irresponsabilidade', 'vergonha', 'crencas', 'leis', 'sintese', 'reconexao'];
+      const sections = ['irresponsabilidade', 'vergonha', 'crencas', 'leis', 'sintese', 'reconexao', 'percurso'];
+      
+      // Check if at bottom of page
+      const isAtBottom = window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 100;
+      
+      if (isAtBottom) {
+        setActiveSection(sections[sections.length - 1]);
+        return;
+      }
+
       const current = sections.find(section => {
         const elem = document.getElementById(section);
         if (elem) {
           const rect = elem.getBoundingClientRect();
-          return rect.top <= 150 && rect.bottom >= 150;
+          return rect.top <= 160 && rect.bottom >= 160;
         }
         return false;
       });
       if (current) setActiveSection(current);
     };
 
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    let timeoutId: number;
+    const throttledScroll = () => {
+      if (timeoutId) return;
+      timeoutId = window.setTimeout(() => {
+        handleScroll();
+        timeoutId = 0;
+      }, 100);
+    };
+
+    window.addEventListener('scroll', throttledScroll);
+    return () => {
+      window.removeEventListener('scroll', throttledScroll);
+      if (timeoutId) window.clearTimeout(timeoutId);
+    };
   }, []);
 
   return (
@@ -342,8 +325,6 @@ export default function App() {
           </motion.div>
         )}
       </AnimatePresence>
-
-      <CustomCursor />
 
       {/* Scroll Progress Bar */}
       <motion.div 
@@ -506,7 +487,6 @@ export default function App() {
           transition={{ delay: 4, duration: 1 }}
           className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3"
         >
-          <span className="text-[8px] uppercase tracking-[0.4em] font-bold text-accent/40">Scroll</span>
           <div className="w-[1px] h-12 bg-gradient-to-b from-accent/40 to-transparent" />
         </motion.div>
       </header>
@@ -690,9 +670,9 @@ export default function App() {
               {/* Icons over circles */}
               <div className="absolute inset-0 pointer-events-none">
                 {[
-                  { id: 0, icon: <Layers />, top: "20%", left: "50%" },
-                  { id: 1, icon: <Scale />, top: "70%", left: "20%" },
-                  { id: 2, icon: <Heart />, top: "70%", left: "80%" }
+                  { id: 0, icon: <Heart />, top: "20%", left: "50%" },
+                  { id: 1, icon: <Layers />, top: "70%", left: "20%" },
+                  { id: 2, icon: <Scale />, top: "70%", left: "80%" }
                 ].map((item) => (
                   <div 
                     key={item.id}
@@ -947,7 +927,7 @@ export default function App() {
       </section>
 
       {/* Storytelling: O Meu Percurso */}
-      <section className="section-padding bg-white overflow-hidden">
+      <section id="percurso" className="section-padding bg-white overflow-hidden">
         <div className="max-w-7xl mx-auto">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
             <motion.div
@@ -1060,6 +1040,8 @@ export default function App() {
               <div 
                 className="flex items-center gap-2 mb-8 cursor-pointer group"
                 onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+                role="button"
+                aria-label="Ir para o topo"
               >
                 <div className="w-8 h-8 bg-accent rounded-sm flex items-center justify-center text-paper font-bold group-hover:bg-ink transition-colors">V</div>
                 <span className="font-serif text-xl font-bold tracking-tight uppercase group-hover:text-accent transition-colors">Visão Sistémica</span>
