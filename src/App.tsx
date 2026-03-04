@@ -410,7 +410,7 @@ export default function App() {
           <motion.div style={{ y: heroSubtextY }}>
             <Reveal delay={2.8}>
               <p className="text-xl md:text-3xl text-muted max-w-3xl mx-auto mb-20 font-light leading-relaxed">
-                Do sintoma à raiz. Das ordens do amor à liberdade de ser quem realmente é.
+                Onde a sua história encontra o seu lugar. Descubra as forças invisíveis que moldam a sua vida e recupere a sua liberdade de ser.
               </p>
             </Reveal>
           </motion.div>
@@ -446,8 +446,8 @@ export default function App() {
       <section id="irresponsabilidade" className="section-padding bg-white">
         <div className="max-w-7xl mx-auto">
           <SectionHeader 
-            subtitle="Fase 01: O Sintoma"
-            title="A Armadilha da Irresponsabilidade"
+            subtitle="O Ponto de Partida"
+            title="Quando o Problema se Torna um Refúgio"
             accent="text-red-600"
           />
           
@@ -457,27 +457,27 @@ export default function App() {
                 <div className="w-12 h-12 bg-red-50 text-red-600 rounded-2xl flex items-center justify-center mb-6">
                   <Shield size={24} />
                 </div>
-                <h3 className="text-2xl font-serif mb-4">O Problema como Escudo</h3>
+                <h3 className="text-2xl font-serif mb-4">A Proteção Inconsciente</h3>
                 <p className="text-muted leading-relaxed mb-6">
-                  Muitas vezes, ao afirmarmos <span className="text-ink font-medium italic">"tenho um problema..."</span>, estamos a converter o autoconhecimento numa estratégia de imobilismo. É a nossa "criança interior" que assume o leme, transformando o trauma num refúgio seguro para evitar os riscos e as responsabilidades da vida adulta.
+                  Dizer <span className="text-ink font-medium italic">"eu tenho um problema"</span> pode ser, secretamente, uma forma de não mudar. A nossa criança interior usa a dor como um escudo para não enfrentar os riscos de crescer e assumir o leme da própria vida adulta.
                 </p>
               </Card>
             </Reveal>
-
+ 
             <Reveal x={20}>
               <Card className="border-red-100 h-full">
                 <div className="w-12 h-12 bg-red-50 text-red-600 rounded-2xl flex items-center justify-center mb-6">
                   <Ghost size={24} />
                 </div>
-                <h3 className="text-2xl font-serif mb-4">A Fuga à Ação</h3>
+                <h3 className="text-2xl font-serif mb-4">O Labirinto da Inércia</h3>
                 <p className="text-muted leading-relaxed mb-6">
-                  Se me escondo atrás de um trauma, não assumo responsabilidade. O problema torna-se a minha identidade inteira, impedindo o movimento em direção à vida.
+                  Identificar-se com o trauma é uma forma de parar no tempo. Enquanto o problema for a sua identidade, a vida adulta e as suas infinitas possibilidades ficam à espera do lado de fora.
                 </p>
                 <ul className="space-y-3">
                   {[
-                    "Digo 'Sou incapaz' para evitar liderar.",
-                    "Digo 'A vida é injusta' para não partilhar.",
-                    "Digo 'Falta-me algo' para não avançar."
+                    "Uso a minha dor para não ter de agir.",
+                    "Culpo o passado para não construir o futuro.",
+                    "Mantenho o sintoma para continuar a pertencer."
                   ].map((item) => (
                     <li key={item} className="flex items-center gap-3 text-sm text-muted">
                       <ChevronRight size={16} className="text-red-400" />
@@ -495,8 +495,8 @@ export default function App() {
       <section id="vergonha" className="section-padding bg-paper">
         <div className="max-w-7xl mx-auto">
           <SectionHeader 
-            subtitle="Fase 02: A Ponte Emocional"
-            title="A Emoção da Vergonha"
+            subtitle="O Mergulho Interno"
+            title="O que o Corpo Sente e a Mente Esconde"
             accent="text-pink-600"
           />
           
@@ -506,17 +506,17 @@ export default function App() {
               
               <div className="relative z-10 flex flex-col items-center text-center max-w-3xl mx-auto">
                 <div className="px-6 py-2 bg-pink-50 text-pink-600 rounded-full text-sm font-bold uppercase tracking-widest mb-8">
-                  O Mecanismo de Defesa
+                  A Emoção da Vergonha
                 </div>
                 <p className="text-2xl md:text-3xl font-serif leading-relaxed mb-12">
-                  A vergonha atinge a identidade: é uma emoção que tem na sua génese...
+                  A vergonha não é sobre o que fez, mas sobre quem acredita ser. É uma bússola que aponta para onde a sua essência foi silenciada.
                 </p>
                 
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full">
                   {[
-                    { icon: <AlertCircle />, title: "Medo", desc: "De ser rejeitado ou expulso do grupo por não ser perfeito." },
-                    { icon: <Zap />, title: "Raiva", desc: "Pela injustiça de ter de anular a própria essência." },
-                    { icon: <CloudRain />, title: "Tristeza", desc: "Pela perda da ligação real às suas próprias raízes." }
+                    { icon: <AlertCircle />, title: "O Medo", desc: "De ser rejeitado ou expulso do grupo por não ser 'perfeito' o suficiente." },
+                    { icon: <Zap />, title: "A Raiva", desc: "Pela injustiça silenciosa de ter de anular a sua própria verdade." },
+                    { icon: <CloudRain />, title: "A Tristeza", desc: "Pela perda da ligação real às suas raízes e à sua força vital." }
                   ].map((item) => (
                     <div key={item.title} className="flex flex-col items-center p-6 rounded-2xl bg-paper/50">
                       <div className="text-pink-500 mb-4">{item.icon}</div>
@@ -535,18 +535,18 @@ export default function App() {
       <section id="crencas" className="section-padding bg-white">
         <div className="max-w-7xl mx-auto">
           <SectionHeader 
-            subtitle="Fase 03: A Narrativa"
-            title="Crenças Limitantes"
+            subtitle="O Filtro da Realidade"
+            title="As Histórias que Contamos a Nós Mesmos"
             accent="text-orange-600"
           />
           
           <div className="bento-grid">
             {[
-              { title: "Não sou suficiente", axis: "Identidade", desc: "Para ser aceite, nego partes de mim. Acredito que a minha verdade é perigosa.", className: "col-span-1 md:col-span-2" },
-              { title: "Não sou capaz", axis: "Capacidade", desc: "Estou fora do meu lugar. Ao carregar o peso dos antepassados, perco a minha força.", className: "col-span-1 md:col-span-2" },
-              { title: "Não mereço", axis: "Merecimento", desc: "Dificuldade em acolher a vida. Se julgo o que recebi, sinto-me indigno de prosperar.", className: "col-span-1 md:col-span-4" }
+              { title: "Não sou suficiente", axis: "Identidade", desc: "Para ser aceite, nego partes de mim. Acredito que a minha verdade é perigosa e que preciso de ser outro para ser amado.", className: "col-span-1 md:col-span-2" },
+              { title: "Não sou capaz", axis: "Capacidade", desc: "Estou fora do meu lugar. Ao carregar o peso dos que vieram antes, perco a força para realizar o que é meu.", className: "col-span-1 md:col-span-2" },
+              { title: "Não mereço", axis: "Merecimento", desc: "Dificuldade em acolher a abundância. Se julgo o que recebi dos meus pais, sinto-me indigno de prosperar na vida.", className: "col-span-1 md:col-span-4" }
             ].map((item, i) => (
-              <Reveal key={item.title} delay={i * 0.1} y={30}>
+              <Reveal key={item.title} delay={item.title === "Não mereço" ? 0.3 : i * 0.1} y={30}>
                 <div className={cn("bento-item group h-full", item.className)}>
                   <div className="text-[10px] font-bold uppercase tracking-widest text-orange-500 mb-4">{item.axis}</div>
                   <h4 className="text-3xl font-serif mb-4 group-hover:text-orange-600 transition-colors">{item.title}</h4>
@@ -562,8 +562,8 @@ export default function App() {
       <section id="leis" className="section-padding bg-paper relative overflow-hidden">
         <div className="max-w-7xl mx-auto">
           <SectionHeader 
-            subtitle="Fase 04: A Raiz Sistémica"
-            title="As Leis do Amor"
+            subtitle="A Ordem que Liberta"
+            title="O Fluxo Invisível da Vida"
             accent="text-accent"
           />
           
@@ -713,9 +713,9 @@ export default function App() {
         <div className="max-w-7xl mx-auto relative z-10">
           <Reveal y={-20}>
             <div className="text-center mb-24">
-              <h2 className="text-5xl md:text-7xl font-serif mb-6">O Efeito Dominó</h2>
+              <h2 className="text-5xl md:text-7xl font-serif mb-6">A Teia da Vida</h2>
               <p className="text-paper/60 max-w-2xl mx-auto font-light text-lg">
-                Como a quebra de uma lei invisível flui através da emoção e se manifesta no bloqueio prático.
+                Nada acontece isolado. Um desequilíbrio na raiz reverbera em cada escolha que faz hoje, até que a ordem seja restabelecida.
               </p>
             </div>
           </Reveal>
@@ -777,8 +777,8 @@ export default function App() {
       <section id="reconexao" className="section-padding bg-white">
         <div className="max-w-7xl mx-auto">
           <SectionHeader 
-            subtitle="O Caminho de Volta"
-            title="O Processo de Reconexão"
+            subtitle="A Jornada de Cura"
+            title="O Regresso ao Seu Lugar"
           />
           
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
@@ -902,12 +902,12 @@ export default function App() {
                   <User size={20} />
                   <span className="text-xs font-bold uppercase tracking-[0.3em]">O Meu Percurso</span>
                 </div>
-                <h2 className="text-5xl md:text-6xl font-serif leading-tight">A Intenção por trás do Olhar</h2>
+                <h2 className="text-5xl md:text-6xl font-serif leading-tight">Guiando Almas ao seu Lugar</h2>
                 <p className="text-lg text-muted leading-relaxed">
-                  Não sou eu quem cura, é a própria vida que encontra o seu caminho quando paramos de lhe resistir. O meu trabalho é facilitar o encontro entre a sua dor e a força dos seus antepassados.
+                  Acredito que cada pessoa carrega em si a semente da sua própria cura. O meu papel é apenas preparar o terreno, removendo as pedras sistémicas que impedem o seu crescimento natural.
                 </p>
                 <p className="text-lg text-muted leading-relaxed">
-                  Após anos de estudo das leis sistémicas, compreendi que cada sintoma é um pedido de amor de alguém que foi esquecido no sistema. Ao darmos lugar a esse alguém, o sintoma pode finalmente partir.
+                  Não sou eu quem cura, é a própria vida que encontra o seu caminho quando paramos de lhe resistir. O meu trabalho é facilitar o encontro entre a sua dor e a força dos seus antepassados.
                 </p>
                 <div className="pt-8">
                   <button className="px-10 py-5 bg-accent text-paper rounded-full font-bold uppercase text-xs tracking-widest hover:bg-accent/90 transition-all shadow-lg hover:shadow-accent/20">

@@ -13,22 +13,22 @@ export const NAV_LINKS = [
 export const LAWS_DATA = [
   { 
     title: "Pertença", 
-    law: "Todos têm o mesmo direito de pertencer.",
-    violation: "Exclusão gera compensação: um descendente repete o destino do excluído.",
+    law: "Ninguém pode ser deixado para trás.",
+    violation: "Quando alguém é esquecido ou excluído, o sistema 'chama' um descendente para repetir esse destino, até que o lugar dessa pessoa seja honrado.",
     color: "text-cyan-600",
     icon: Heart
   },
   { 
     title: "Ordem", 
-    law: "Quem chegou antes tem precedência.",
-    violation: "Parentalização: quando o filho tenta salvar os pais, perde a sua força.",
+    law: "A vida flui de quem veio antes para quem vem depois.",
+    violation: "Tentar 'salvar' os pais ou carregar o peso deles retira-nos a força para viver a nossa própria história. O amor que adoece é o que tenta inverter esta ordem.",
     color: "text-orange-600",
     icon: Layers
   },
   { 
     title: "Equilíbrio", 
-    law: "Trocas justas entre iguais.",
-    violation: "Dar em excesso ou recusar receber bloqueia o fluxo da abundância.",
+    law: "O dar e o receber em harmonia.",
+    violation: "Relações saudáveis nutrem-se de trocas equilibradas. Quando damos em excesso ou nos recusamos a receber, criamos dívidas emocionais que bloqueiam a nossa prosperidade.",
     color: "text-pink-600",
     icon: Scale
   }
@@ -36,40 +36,40 @@ export const LAWS_DATA = [
 
 export const FAQ_DATA = [
   { 
-    q: "O que é um emaranhado sistémico?", 
-    a: "É uma ligação inconsciente a um destino ou trauma de um antepassado. Quando alguém é excluído ou injustiçado no passado, um descendente pode 'repetir' esse padrão para tentar equilibrar o sistema." 
+    q: "O que é, afinal, um emaranhado sistémico?", 
+    a: "Imagine um fio invisível que o prende a uma dor que não é sua. É uma lealdade inconsciente a um antepassado que sofreu. O trabalho sistémico ajuda a identificar esse fio e a soltá-lo com amor, para que possa caminhar livre." 
   },
   { 
-    q: "Preciso que a minha família esteja presente?", 
-    a: "Não. O trabalho sistémico é feito através da sua própria representação interna e campo morfológico. A mudança em si reverbera em todo o sistema, mesmo que os outros não estejam presentes." 
+    q: "A minha família precisa de participar na sessão?", 
+    a: "Não é necessário. O trabalho foca-se na sua imagem interna da família. Quando a sua perceção muda e encontra o seu lugar, todo o sistema ao seu redor começa a reorganizar-se naturalmente." 
   },
   { 
-    q: "Quanto tempo dura uma sessão?", 
-    a: "Uma sessão típica dura entre 60 a 90 minutos. O foco não é o tempo, mas sim chegar ao ponto de clareza onde o movimento de cura pode começar." 
+    q: "Quanto tempo demora até sentir resultados?", 
+    a: "Cada processo é único. Alguns sentem um alívio imediato, como se um peso saísse dos ombros. Para outros, a mudança é como uma semente que cresce silenciosamente nos dias seguintes à sessão." 
   },
   { 
-    q: "Como sei se este trabalho é para mim?", 
-    a: "Se sente que repete padrões, se tem bloqueios que não consegue explicar racionalmente ou se sente um peso que parece não ser seu, a visão sistémica pode trazer a luz necessária." 
+    q: "Como sei se este é o momento certo para mim?", 
+    a: "Se sente que está a 'patinar' no mesmo lugar, se as suas relações repetem sempre o mesmo guião ou se carrega uma tristeza que não sabe de onde vem, o seu sistema está a pedir para ser visto." 
   }
 ];
 
 export const TESTIMONIALS_DATA = [
   { 
     name: "Maria Silva", 
-    role: "Empresária", 
-    text: "A visão sistémica permitiu-me compreender porque é que os meus negócios estagnavam. Ao honrar a ordem, tudo começou a fluir.",
+    role: "Empreendedora", 
+    text: "Sempre senti que o sucesso me fugia por entre os dedos. Só quando olhei para a história da minha avó é que percebi que não me dava permissão para brilhar. Hoje, o meu negócio flui com uma leveza que nunca julguei possível.",
     stars: 5
   },
   { 
     name: "João Pereira", 
     role: "Arquiteto", 
-    text: "Recuperei a minha força como homem ao voltar ao meu lugar de filho. A minha relação com o meu pai mudou radicalmente.",
+    text: "A minha relação com o meu pai era um campo de batalha. Através da visão sistémica, deixei de ser o juiz dele para ser apenas o filho. Essa mudança devolveu-me a paz e a força que me faltavam.",
     stars: 5
   },
   { 
     name: "Ana Costa", 
     role: "Psicóloga", 
-    text: "Uma ferramenta indispensável para quem quer ir à raiz dos problemas e não apenas tratar os sintomas superficiais.",
+    text: "Trabalho com pessoas há anos, mas esta abordagem trouxe-me a clareza que faltava. É ir direto à alma do problema, sem rodeios, mas com uma compaixão profunda por tudo o que foi.",
     stars: 5
   }
 ];
