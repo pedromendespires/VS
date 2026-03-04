@@ -417,22 +417,6 @@ export default function App() {
           </Reveal>
         </div>
 
-        {/* Floating Elements */}
-        {[
-          { top: "33%", left: "10%", size: "w-20 h-20", delay: 0 },
-          { bottom: "25%", right: "10%", size: "w-32 h-32", delay: 1 }
-        ].map((el, i) => (
-          <motion.div 
-            key={i}
-            animate={{ y: [0, i === 0 ? -20 : 20, 0] }}
-            transition={{ duration: 6 + i * 2, repeat: Infinity, ease: "easeInOut", delay: el.delay }}
-            className={cn("absolute hidden xl:block opacity-20", el.size)}
-            style={{ top: el.top, left: el.left, bottom: el.bottom, right: el.right }}
-          >
-            <div className={cn("border border-accent rounded-full w-full h-full")} />
-          </motion.div>
-        ))}
-
         {/* Scroll Indicator */}
         <motion.div 
           initial={{ opacity: 0 }}
