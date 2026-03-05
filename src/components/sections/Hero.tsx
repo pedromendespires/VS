@@ -28,7 +28,7 @@ export const Hero = () => {
       <div className="relative z-10 text-center px-6 max-w-5xl w-full">
         <motion.div style={{ y: heroTextY }}>
           <Reveal delay={2.4} y={40}>
-            <h1 className="text-5xl sm:text-7xl md:text-[8rem] lg:text-[11rem] xl:text-[13rem] font-serif leading-[0.9] md:leading-[0.8] mb-10 md:mb-16 tracking-tighter">
+            <h1 className="text-4xl sm:text-6xl md:text-[7rem] lg:text-[9rem] xl:text-[11rem] font-serif leading-[0.9] md:leading-[0.8] mb-10 md:mb-16 tracking-tighter">
               A Visão <br />
               <span className="italic text-accent">Sistémica</span>
             </h1>

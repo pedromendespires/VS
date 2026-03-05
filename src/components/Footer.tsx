@@ -16,7 +16,7 @@ export const Footer = ({ newsletterStatus, handleNewsletterSubmit }: FooterProps
             <span className="font-serif text-2xl font-bold tracking-tighter">Visão Sistémica</span>
           </div>
           <p className="text-muted max-w-md mb-8 leading-relaxed">
-            Criamos um espaço onde pessoas e sistemas podem regressar à sua ordem natural, onde cada história é vista, honrada e integrada — e onde a cura pode finalmente florescer.
+            Criamos um espaço para que pessoas e sistemas possam regressar à sua ordem natural, onde cada história é vista, escutada, honrada e integrada.
           </p>
           <div className="flex gap-4">
             {[Instagram, Facebook, Linkedin].map((Icon, i) => (
