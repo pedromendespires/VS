@@ -16,7 +16,7 @@ export const Hero = () => {
   const heroScale = useTransform(heroProgress, [0, 1], [1, 1.1]);
 
   return (
-    <header ref={heroRef} className="relative min-h-screen flex items-center justify-center overflow-hidden bg-[#f5f2ed] pt-20 pb-12">
+    <header ref={heroRef} className="relative min-h-[90vh] flex items-center justify-center overflow-hidden bg-[#f5f2ed] pt-20 pb-4">
       <motion.div 
         className="absolute inset-0 z-0"
         style={{ y: heroY, opacity: heroOpacity, scale: heroScale }}
