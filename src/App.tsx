@@ -415,20 +415,7 @@ export default function App() {
             </Reveal>
           </motion.div>
           
-          <Reveal delay={3.2} y={20}>
-            <div className="flex flex-col md:flex-row items-center justify-center gap-10">
-              <a 
-                href="#irresponsabilidade"
-                onClick={(e) => scrollToSection(e, '#irresponsabilidade')}
-                className="group relative px-16 py-6 bg-ink text-paper rounded-full font-bold uppercase tracking-[0.2em] text-[11px] transition-all duration-500 hover:bg-accent hover:scale-105 shadow-2xl"
-              >
-                Começar a Jornada
-                <div className="absolute -bottom-3 -right-3 w-10 h-10 bg-accent rounded-full flex items-center justify-center group-hover:bg-ink transition-colors duration-500 shadow-lg">
-                  <ArrowDown size={16} className="group-hover:translate-y-1 transition-transform duration-500" />
-                </div>
-              </a>
-            </div>
-          </Reveal>
+          {/* Removed "Começar a Jornada" button as requested */}
         </div>
 
         {/* Scroll Indicator */}
