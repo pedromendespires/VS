@@ -50,6 +50,11 @@ export const Sintese = () => (
             <ArrowRight size={64} className="text-paper" />
           </motion.div>
         </div>
+
+        {/* Connecting Arrows (Mobile) */}
+        <div className="lg:hidden flex flex-col items-center gap-4 py-4 opacity-10">
+          <ArrowRight size={32} className="text-paper rotate-90" />
+        </div>
         
         {[
           { 

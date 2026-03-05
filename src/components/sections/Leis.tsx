@@ -23,9 +23,9 @@ export const Leis = () => {
           accent="text-accent"
         />
         
-        <div className="flex flex-col lg:flex-row items-center justify-center gap-20">
+        <div className="flex flex-col lg:flex-row items-center justify-center gap-12 lg:gap-20">
           {/* Interactive Diagram */}
-          <Reveal x={-30} className="w-full lg:w-1/2">
+          <Reveal x={-30} className="w-full lg:w-1/2 max-w-md lg:max-w-none">
             <div className="relative w-full aspect-square flex items-center justify-center">
               <AnimatePresence>
                 {activeLaw === null && (
@@ -65,12 +65,18 @@ export const Leis = () => {
                       <motion.circle 
                         cx={pos.cx} cy={pos.cy} r="15"
                         className={cn(
-                          "cursor-pointer transition-all duration-500", 
+                          "cursor-pointer transition-all duration-500 outline-none", 
                           activeLaw === pos.id ? "fill-accent/10 stroke-accent" : "fill-white stroke-ink/10"
                         )}
                         strokeWidth="0.5"
                         onClick={() => setActiveLaw(pos.id)}
                         onMouseEnter={() => setActiveLaw(pos.id)}
+                        tabIndex={0}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter' || e.key === ' ') {
+                            setActiveLaw(pos.id);
+                          }
+                        }}
                         aria-label={pos.label}
                         role="button"
                       />

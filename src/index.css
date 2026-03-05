@@ -13,11 +13,16 @@
 
 @layer base {
   html {
-    scroll-behavior: smooth;
+    @apply antialiased;
   }
 
   body {
-    @apply bg-paper text-ink font-sans antialiased relative;
+    @apply bg-paper text-ink font-sans antialiased relative overflow-x-hidden;
+  }
+
+  @media (max-width: 1024px) {
+    body {
+    }
   }
 
   ::selection {
@@ -54,12 +59,13 @@
     width: 100%;
     height: 100%;
     background-image: url("https://grainy-gradients.vercel.app/noise.svg");
-    opacity: 0.04;
+    opacity: 0.03;
     pointer-events: none;
-    z-index: 100;
-    filter: contrast(150%) brightness(100%);
+    z-index: 9999;
+    filter: contrast(120%) brightness(100%);
   }
 }
+
 
 .faq-trigger[data-state="open"] .faq-icon {
   @apply rotate-45;

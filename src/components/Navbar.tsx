@@ -40,7 +40,7 @@ export const Navbar = ({
       <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between">
         <div 
           className="flex items-center gap-2 sm:gap-3 cursor-pointer group"
-          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          onClick={() => (window as any).lenis?.scrollTo(0)}
           role="button"
           aria-label="Ir para o topo"
         >

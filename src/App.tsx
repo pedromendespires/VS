@@ -40,12 +40,12 @@ export default function App() {
     const lenis = new Lenis({
       duration: 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-      orientation: 'vertical',
-      gestureOrientation: 'vertical',
       smoothWheel: true,
       wheelMultiplier: 1,
-      infinite: false,
     });
+
+    // Store lenis in window for global access if needed
+    (window as any).lenis = lenis;
 
     function raf(time: number) {
       lenis.raf(time);
@@ -56,6 +56,7 @@ export default function App() {
 
     return () => {
       lenis.destroy();
+      (window as any).lenis = null;
     };
   }, []);
 
@@ -70,19 +71,25 @@ export default function App() {
     setTimeout(() => setNewsletterStatus('idle'), 5000);
   }, []);
 
-  const scrollToSection = useCallback((e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
-    e.preventDefault();
+  const scrollToSection = useCallback((e: React.MouseEvent<HTMLAnchorElement> | null, href: string) => {
+    if (e) e.preventDefault();
     const targetId = href.replace('#', '');
-    const elem = document.getElementById(targetId);
-    if (elem) {
-      const offset = 80;
-      const elementPosition = elem.getBoundingClientRect().top;
-      const offsetPosition = elementPosition + window.scrollY - offset;
-
-      window.scrollTo({
-        top: offsetPosition,
-        behavior: 'smooth'
+    const lenis = (window as any).lenis;
+    
+    if (lenis) {
+      lenis.scrollTo(`#${targetId}`, {
+        offset: -80,
+        duration: 1.5,
+        easing: (t: number) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       });
+    } else {
+      const elem = document.getElementById(targetId);
+      if (elem) {
+        const offset = 80;
+        const elementPosition = elem.getBoundingClientRect().top;
+        const offsetPosition = elementPosition + window.scrollY - offset;
+        window.scrollTo({ top: offsetPosition, behavior: 'smooth' });
+      }
     }
     setIsMobileMenuOpen(false);
   }, []);
@@ -95,6 +102,7 @@ export default function App() {
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
+
 
   return (
     <div className="min-h-screen selection:bg-accent/20 bg-paper text-ink font-sans antialiased">
@@ -148,14 +156,14 @@ export default function App() {
       <AnimatePresence>
         {isScrolled && (
           <motion.button
-            initial={{ opacity: 0, scale: 0.8 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.8 }}
-            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-            className="fixed bottom-28 right-8 z-50 w-12 h-12 bg-white border border-ink/10 rounded-full flex items-center justify-center shadow-xl hover:bg-accent hover:text-paper transition-all"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 20 }}
+            onClick={() => (window as any).lenis?.scrollTo(0)}
+            className="fixed bottom-28 right-8 z-50 w-12 h-12 bg-white border border-ink/10 rounded-full flex items-center justify-center shadow-xl hover:bg-accent hover:text-paper transition-all group"
             aria-label="Voltar ao topo"
           >
-            <ArrowUp size={20} />
+            <ArrowUp size={20} className="group-hover:-translate-y-1 transition-transform" />
           </motion.button>
         )}
       </AnimatePresence>
