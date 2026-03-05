@@ -75,21 +75,21 @@ const Navbar = ({ isScrolled, scrollToSection, isMobileMenuOpen, setIsMobileMenu
         style={{ scaleX: scrollYProgress }}
       />
       
-      <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
-        <div 
-          className="flex items-center gap-3 cursor-pointer group"
-          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-          role="button"
-          aria-label="Ir para o topo"
-        >
-          <motion.div 
-            whileHover={{ rotate: 180 }}
-            className="w-10 h-10 bg-accent rounded-full flex items-center justify-center text-paper font-bold shadow-lg group-hover:bg-ink transition-colors duration-500"
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 flex items-center justify-between">
+          <div 
+            className="flex items-center gap-2 sm:gap-3 cursor-pointer group"
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            role="button"
+            aria-label="Ir para o topo"
           >
-            V
-          </motion.div>
-          <span className="font-serif text-2xl font-bold tracking-tighter group-hover:text-accent transition-colors duration-500">Visão Sistémica</span>
-        </div>
+            <motion.div 
+              whileHover={{ rotate: 180 }}
+              className="w-8 h-8 sm:w-10 sm:h-10 bg-accent rounded-full flex items-center justify-center text-paper font-bold shadow-lg group-hover:bg-ink transition-colors duration-500"
+            >
+              V
+            </motion.div>
+            <span className="font-serif text-xl sm:text-2xl font-bold tracking-tighter group-hover:text-accent transition-colors duration-500 truncate max-w-[150px] sm:max-w-none">Visão Sistémica</span>
+          </div>
 
         {/* Desktop Menu */}
         <div className="hidden lg:flex items-center gap-10">
@@ -152,12 +152,12 @@ const Navbar = ({ isScrolled, scrollToSection, isMobileMenuOpen, setIsMobileMenu
 };
 
 const SectionHeader = ({ title, subtitle, accent }: { title: string, subtitle: string, accent?: string }) => (
-  <div className="max-w-3xl mb-24">
+  <div className="max-w-3xl mb-12 md:mb-24">
     <motion.div 
       initial={{ opacity: 0, x: -20 }}
       whileInView={{ opacity: 1, x: 0 }}
       viewport={{ once: true }}
-      className={cn("text-[10px] font-bold uppercase tracking-[0.5em] mb-6", accent || "text-accent")}
+      className={cn("text-[10px] font-bold uppercase tracking-[0.5em] mb-4 md:mb-6", accent || "text-accent")}
     >
       {subtitle}
     </motion.div>
@@ -166,7 +166,7 @@ const SectionHeader = ({ title, subtitle, accent }: { title: string, subtitle: s
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ duration: 1, ease: [0.16, 1, 0.3, 1] }}
-      className="text-5xl md:text-7xl lg:text-8xl font-serif leading-[0.9] tracking-tighter"
+      className="text-4xl sm:text-5xl md:text-7xl lg:text-8xl font-serif leading-[0.95] md:leading-[0.9] tracking-tighter"
     >
       {title}
     </motion.h2>
@@ -183,7 +183,7 @@ const Card: React.FC<CardProps> = ({ children, className }) => (
     initial={{ opacity: 0, y: 20 }}
     whileInView={{ opacity: 1, y: 0 }}
     viewport={{ once: true }}
-    className={cn("bg-white p-8 rounded-3xl border border-ink/5 shadow-sm hover:shadow-md transition-shadow", className)}
+    className={cn("bg-white p-6 sm:p-8 rounded-2xl sm:rounded-3xl border border-ink/5 shadow-sm hover:shadow-md transition-shadow", className)}
   >
     {children}
   </motion.div>
@@ -388,19 +388,19 @@ export default function App() {
       </div>
 
       {/* Hero Section */}
-      <header ref={heroRef} className="relative h-[110vh] flex items-center justify-center overflow-hidden bg-[#f5f2ed]">
+      <header ref={heroRef} className="relative min-h-screen flex items-center justify-center overflow-hidden bg-[#f5f2ed] py-20">
         <motion.div 
           className="absolute inset-0 z-0"
           style={{ y: heroY, opacity: heroOpacity, scale: heroScale }}
         >
-          <div className="absolute top-1/4 left-1/4 w-[500px] h-[500px] bg-accent/10 rounded-full blur-[150px]" />
-          <div className="absolute bottom-1/4 right-1/4 w-[500px] h-[500px] bg-orange-100 rounded-full blur-[150px]" />
+          <div className="absolute top-1/4 left-1/4 w-[300px] md:w-[500px] h-[300px] md:h-[500px] bg-accent/10 rounded-full blur-[100px] md:blur-[150px]" />
+          <div className="absolute bottom-1/4 right-1/4 w-[300px] md:w-[500px] h-[300px] md:h-[500px] bg-orange-100 rounded-full blur-[100px] md:blur-[150px]" />
         </motion.div>
         
-        <div className="relative z-10 text-center px-6 max-w-5xl">
+        <div className="relative z-10 text-center px-6 max-w-5xl w-full">
           <motion.div style={{ y: heroTextY }}>
             <Reveal delay={2.4} y={40}>
-              <h1 className="text-8xl md:text-[10rem] lg:text-[13rem] font-serif leading-[0.8] mb-16 tracking-tighter">
+              <h1 className="text-6xl sm:text-7xl md:text-[10rem] lg:text-[13rem] font-serif leading-[0.85] md:leading-[0.8] mb-10 md:mb-16 tracking-tighter">
                 A Visão <br />
                 <span className="italic text-accent">Sistémica</span>
               </h1>
@@ -409,13 +409,11 @@ export default function App() {
           
           <motion.div style={{ y: heroSubtextY }}>
             <Reveal delay={2.8}>
-              <p className="text-xl md:text-3xl text-muted max-w-3xl mx-auto mb-20 font-light leading-relaxed">
-                Onde a sua história encontra o seu lugar. Descubra as forças invisíveis que moldam a sua vida e recupere a sua liberdade de ser.
+              <p className="text-lg sm:text-xl md:text-3xl text-muted max-w-3xl mx-auto mb-10 md:mb-20 font-light leading-relaxed">
+                O lugar onde a sua história ganha sentido. Descubra as forças invisíveis que moldam o seu caminho e recupere a liberdade de ser quem é.
               </p>
             </Reveal>
           </motion.div>
-          
-          {/* Removed "Começar a Jornada" button as requested */}
         </div>
 
         {/* Scroll Indicator */}
@@ -438,14 +436,14 @@ export default function App() {
             accent="text-red-600"
           />
           
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 md:gap-12">
             <Reveal x={-20}>
               <Card className="border-red-100 h-full">
-                <div className="w-12 h-12 bg-red-50 text-red-600 rounded-2xl flex items-center justify-center mb-6">
+                <div className="w-10 h-10 md:w-12 md:h-12 bg-red-50 text-red-600 rounded-xl md:rounded-2xl flex items-center justify-center mb-6">
                   <Shield size={24} />
                 </div>
-                <h3 className="text-2xl font-serif mb-4">A Proteção Inconsciente</h3>
-                <p className="text-muted leading-relaxed mb-6">
+                <h3 className="text-xl md:text-2xl font-serif mb-4">A Proteção Inconsciente</h3>
+                <p className="text-muted leading-relaxed mb-6 text-sm md:text-base">
                   Dizer <span className="text-ink font-medium italic">"eu tenho um problema"</span> pode ser, secretamente, uma forma de não mudar. A nossa criança interior usa a dor como um escudo para não enfrentar os riscos de crescer e assumir o leme da própria vida adulta.
                 </p>
               </Card>
@@ -453,11 +451,11 @@ export default function App() {
  
             <Reveal x={20}>
               <Card className="border-red-100 h-full">
-                <div className="w-12 h-12 bg-red-50 text-red-600 rounded-2xl flex items-center justify-center mb-6">
+                <div className="w-10 h-10 md:w-12 md:h-12 bg-red-50 text-red-600 rounded-xl md:rounded-2xl flex items-center justify-center mb-6">
                   <Ghost size={24} />
                 </div>
-                <h3 className="text-2xl font-serif mb-4">O Labirinto da Inércia</h3>
-                <p className="text-muted leading-relaxed mb-6">
+                <h3 className="text-xl md:text-2xl font-serif mb-4">O Labirinto da Inércia</h3>
+                <p className="text-muted leading-relaxed mb-6 text-sm md:text-base">
                   Identificar-se com o trauma é uma forma de parar no tempo. Enquanto o problema for a sua identidade, a vida adulta e as suas infinitas possibilidades ficam à espera do lado de fora.
                 </p>
                 <ul className="space-y-3">
@@ -466,9 +464,9 @@ export default function App() {
                     "Culpo o passado para não construir o futuro.",
                     "Mantenho o sintoma para continuar a pertencer."
                   ].map((item) => (
-                    <li key={item} className="flex items-center gap-3 text-sm text-muted">
-                      <ChevronRight size={16} className="text-red-400" />
-                      {item}
+                    <li key={item} className="flex items-center gap-3 text-xs md:text-sm text-muted">
+                      <ChevronRight size={16} className="text-red-400 shrink-0" />
+                      <span>{item}</span>
                     </li>
                   ))}
                 </ul>
@@ -488,28 +486,28 @@ export default function App() {
           />
           
           <Reveal y={40}>
-            <div className="bg-white p-12 rounded-[3rem] border border-ink/5 shadow-xl relative overflow-hidden">
+            <div className="bg-white p-6 md:p-12 rounded-[2rem] md:rounded-[3rem] border border-ink/5 shadow-xl relative overflow-hidden">
               <div className="absolute top-0 right-0 w-64 h-64 bg-pink-50 rounded-full blur-3xl -mr-32 -mt-32 opacity-50" />
               
               <div className="relative z-10 flex flex-col items-center text-center max-w-3xl mx-auto">
-                <div className="px-6 py-2 bg-pink-50 text-pink-600 rounded-full text-sm font-bold uppercase tracking-widest mb-8">
+                <div className="px-4 md:px-6 py-2 bg-pink-50 text-pink-600 rounded-full text-[10px] md:text-sm font-bold uppercase tracking-widest mb-6 md:mb-8">
                   A Emoção da Vergonha
                 </div>
-                <p className="text-2xl md:text-3xl font-serif leading-relaxed mb-12">
+                <p className="text-xl md:text-3xl font-serif leading-relaxed mb-8 md:mb-12">
                   A vergonha não é sobre o que fez, mas sobre quem acredita ser. É uma bússola que aponta para onde a sua essência foi silenciada.
                 </p>
                 
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-8 w-full">
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4 md:gap-8 w-full">
                   {[
                     { icon: <AlertCircle />, title: "O Medo", desc: "De ser rejeitado ou expulso do grupo por não ser 'perfeito' o suficiente." },
                     { icon: <Zap />, title: "A Raiva", desc: "Pela injustiça silenciosa de ter de anular a sua própria verdade." },
                     { icon: <CloudRain />, title: "A Tristeza", desc: "Pela perda da ligação real às suas raízes e à sua força vital." }
                   ].map((item) => (
-                    <div key={item.title} className="flex flex-col items-center p-6 rounded-2xl bg-paper/50">
-                      <div className="text-pink-500 mb-4">{item.icon}</div>
-                      <h4 className="font-bold mb-2">{item.title}</h4>
-                      <p className="text-xs text-muted leading-relaxed">{item.desc}</p>
-                    </div>
+            <div key={item.title} className="flex flex-col items-center p-4 sm:p-6 rounded-2xl bg-paper/50">
+              <div className="text-pink-500 mb-3 sm:mb-4">{item.icon}</div>
+              <h4 className="font-bold mb-1 sm:mb-2 text-sm sm:text-base">{item.title}</h4>
+              <p className="text-[10px] sm:text-xs text-muted leading-relaxed">{item.desc}</p>
+            </div>
                   ))}
                 </div>
               </div>
@@ -529,9 +527,9 @@ export default function App() {
           
           <div className="bento-grid">
             {[
-              { title: "Não sou suficiente", axis: "Identidade", desc: "Para ser aceite, nego partes de mim. Acredito que a minha verdade é perigosa e que preciso de ser outro para ser amado.", className: "col-span-1 md:col-span-2" },
-              { title: "Não sou capaz", axis: "Capacidade", desc: "Estou fora do meu lugar. Ao carregar o peso dos que vieram antes, perco a força para realizar o que é meu.", className: "col-span-1 md:col-span-2" },
-              { title: "Não mereço", axis: "Merecimento", desc: "Dificuldade em acolher a abundância. Se julgo o que recebi dos meus pais, sinto-me indigno de prosperar na vida.", className: "col-span-1 md:col-span-4" }
+              { title: "Não sou suficiente", axis: "Identidade", desc: "Para ser aceite, nego partes de mim. Acredito que a minha verdade é perigosa e que preciso de ser outro para ser amado.", className: "col-span-1 lg:col-span-2" },
+              { title: "Não sou capaz", axis: "Capacidade", desc: "Estou fora do meu lugar. Ao carregar o peso dos que vieram antes, perco a força para realizar o que é meu.", className: "col-span-1 lg:col-span-2" },
+              { title: "Não mereço", axis: "Merecimento", desc: "Dificuldade em acolher a abundância. Se julgo o que recebi dos meus pais, sinto-me indigno de prosperar na vida.", className: "col-span-1 lg:col-span-4" }
             ].map((item, i) => (
               <Reveal key={item.title} delay={item.title === "Não mereço" ? 0.3 : i * 0.1} y={30}>
                 <div className={cn("bento-item group h-full", item.className)}>
@@ -637,7 +635,7 @@ export default function App() {
             </Reveal>
 
             {/* Content Display */}
-            <div className="w-full lg:w-1/2 min-h-[400px] flex items-center">
+            <div className="w-full lg:w-1/2 min-h-[300px] md:min-h-[400px] flex items-center">
               <AnimatePresence mode="wait">
                 {activeLaw !== null ? (
                   <motion.div
@@ -645,21 +643,21 @@ export default function App() {
                     initial={{ opacity: 0, x: 20 }}
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0, x: -20 }}
-                    className="p-12 rounded-[3rem] bg-white shadow-2xl border border-ink/5 w-full"
+                    className="p-8 md:p-12 rounded-[2rem] md:rounded-[3rem] bg-white shadow-2xl border border-ink/5 w-full"
                   >
                     {(() => {
                       const item = LAWS_DATA[activeLaw];
                       return (
                         <div>
-                          <h3 className={cn("text-4xl font-serif mb-8", item.color)}>{item.title}</h3>
-                          <div className="space-y-8">
+                          <h3 className={cn("text-3xl md:text-4xl font-serif mb-6 md:mb-8", item.color)}>{item.title}</h3>
+                          <div className="space-y-6 md:space-y-8">
                             <div>
-                              <div className="text-[10px] font-bold uppercase tracking-widest text-muted mb-3">A Lei Sagrada</div>
-                              <p className="text-xl font-medium leading-relaxed">{item.law}</p>
+                              <div className="text-[10px] font-bold uppercase tracking-widest text-muted mb-2 md:mb-3">A Lei Sagrada</div>
+                              <p className="text-lg md:text-xl font-medium leading-relaxed">{item.law}</p>
                             </div>
                             <div>
-                              <div className="text-[10px] font-bold uppercase tracking-widest text-muted mb-3">A Consequência da Violação</div>
-                              <p className="text-muted leading-relaxed text-lg">{item.violation}</p>
+                              <div className="text-[10px] font-bold uppercase tracking-widest text-muted mb-2 md:mb-3">A Consequência da Violação</div>
+                              <p className="text-muted leading-relaxed text-base md:text-lg">{item.violation}</p>
                             </div>
                           </div>
                         </div>
@@ -668,11 +666,11 @@ export default function App() {
                   </motion.div>
                 ) : (
                   <Reveal x={20} className="w-full">
-                    <div className="text-center w-full p-12 rounded-[3rem] border-2 border-dashed border-ink/10 flex flex-col items-center justify-center gap-6">
-                      <div className="w-16 h-16 rounded-full bg-accent/5 flex items-center justify-center text-accent">
-                        <ArrowRight size={32} className="animate-pulse" />
+                    <div className="text-center w-full p-8 md:p-12 rounded-[2rem] md:rounded-[3rem] border-2 border-dashed border-ink/10 flex flex-col items-center justify-center gap-4 md:gap-6">
+                      <div className="w-12 h-12 md:w-16 md:h-16 rounded-full bg-accent/5 flex items-center justify-center text-accent">
+                        <ArrowRight size={24} className="md:size-32 animate-pulse" />
                       </div>
-                      <p className="text-muted italic text-lg">Selecione uma lei no diagrama para explorar a sua profundidade.</p>
+                      <p className="text-muted italic text-base md:text-lg">Selecione uma lei no diagrama para explorar a sua profundidade.</p>
                     </div>
                   </Reveal>
                 )}
@@ -707,9 +705,9 @@ export default function App() {
             </div>
           </Reveal>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-12 relative">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-12 relative">
             {/* Connecting Arrows (Desktop) */}
-            <div className="hidden md:flex absolute top-1/2 left-0 w-full justify-around -translate-y-1/2 z-0 opacity-10">
+            <div className="hidden lg:flex absolute top-1/2 left-0 w-full justify-around -translate-y-1/2 z-0 opacity-10">
               <motion.div
                 animate={{ x: [0, 20, 0] }}
                 transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
@@ -730,29 +728,29 @@ export default function App() {
                 law: "Pertença", 
                 desc: "A exclusão de um antepassado...",
                 color: "border-cyan-500/30 bg-cyan-500/5",
-                icon: <Shield className="text-cyan-400 mb-6" size={32} />
+                icon: <Shield className="text-cyan-400 mb-4 md:mb-6" size={32} />
               },
               { 
                 label: "O Filtro (Emoção)", 
                 law: "Medo", 
                 desc: "...gera um medo inconsciente de ser rejeitado...",
                 color: "border-orange-500/30 bg-orange-500/5",
-                icon: <Zap className="text-orange-400 mb-6" size={32} />
+                icon: <Zap className="text-orange-400 mb-4 md:mb-6" size={32} />
               },
               { 
                 label: "O Fruto (Sintoma)", 
                 law: "Isolamento", 
                 desc: "...que se manifesta como isolamento na vida atual.",
                 color: "border-pink-500/30 bg-pink-500/5",
-                icon: <Ghost className="text-pink-400 mb-6" size={32} />
+                icon: <Ghost className="text-pink-400 mb-4 md:mb-6" size={32} />
               }
             ].map((item, i) => (
               <Reveal key={item.law} delay={i * 0.2} y={40}>
-                <div className={cn("p-12 rounded-[3rem] border-2 backdrop-blur-sm h-full flex flex-col items-center text-center group hover:border-paper/20 transition-all duration-500", item.color)}>
-                  <div className="text-[10px] font-bold uppercase tracking-[0.3em] text-paper/40 mb-8">{item.label}</div>
+                <div className={cn("p-8 md:p-12 rounded-[2rem] md:rounded-[3rem] border-2 backdrop-blur-sm h-full flex flex-col items-center text-center group hover:border-paper/20 transition-all duration-500", item.color)}>
+                  <div className="text-[10px] font-bold uppercase tracking-[0.3em] text-paper/40 mb-6 md:mb-8">{item.label}</div>
                   {item.icon}
-                  <h4 className="text-3xl font-serif mb-6">{item.law}</h4>
-                  <p className="text-paper/60 leading-relaxed font-light">{item.desc}</p>
+                  <h4 className="text-2xl md:text-3xl font-serif mb-4 md:mb-6">{item.law}</h4>
+                  <p className="text-paper/60 leading-relaxed font-light text-sm md:text-base">{item.desc}</p>
                 </div>
               </Reveal>
             ))}
@@ -768,10 +766,10 @@ export default function App() {
             title="O Regresso ao Seu Lugar"
           />
           
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-16 items-center">
             <Reveal x={-30}>
               <div className="relative">
-                <div className="aspect-square rounded-[3rem] overflow-hidden shadow-2xl">
+                <div className="aspect-square rounded-[2rem] md:rounded-[3rem] overflow-hidden shadow-2xl">
                   <img 
                     src="https://picsum.photos/seed/nature/1000/1000" 
                     alt="Natureza e Equilíbrio" 
@@ -864,10 +862,10 @@ export default function App() {
       {/* Storytelling: O Meu Percurso */}
       <section id="percurso" className="section-padding bg-white overflow-hidden">
         <div className="max-w-7xl mx-auto">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-20 items-center">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 md:gap-20 items-center">
             <Reveal x={-50}>
               <div className="relative">
-                <div className="aspect-[3/4] rounded-[4rem] overflow-hidden shadow-2xl">
+                <div className="aspect-[3/4] rounded-[2.5rem] md:rounded-[4rem] overflow-hidden shadow-2xl">
                   <img 
                     src="https://picsum.photos/seed/ocean/800/1200" 
                     alt="Natureza e Mar" 
@@ -876,9 +874,9 @@ export default function App() {
                     loading="lazy"
                   />
                 </div>
-                <div className="absolute -bottom-10 -left-10 w-48 h-48 bg-accent rounded-full flex flex-col items-center justify-center p-8 text-paper text-center font-serif italic shadow-xl">
-                  <span className="text-sm">"O meu lugar é servir à vida através da sua história."</span>
-                  <span className="text-[10px] mt-2 not-italic font-sans uppercase tracking-widest opacity-70">Bert Hellinger</span>
+                <div className="absolute -bottom-6 -left-6 md:-bottom-10 md:-left-10 w-36 h-36 md:w-48 md:h-48 bg-accent rounded-full flex flex-col items-center justify-center p-6 md:p-8 text-paper text-center font-serif italic shadow-xl">
+                  <span className="text-xs md:text-sm">"O meu lugar é servir à vida através da sua história."</span>
+                  <span className="text-[8px] md:text-[10px] mt-2 not-italic font-sans uppercase tracking-widest opacity-70">Bert Hellinger</span>
                 </div>
               </div>
             </Reveal>
@@ -958,7 +956,7 @@ export default function App() {
         
         <div className="max-w-7xl mx-auto px-6 relative z-10">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 mb-24">
-            <div className="lg:col-span-4">
+            <div className="lg:col-span-4 flex flex-col items-center lg:items-start text-center lg:text-left">
               <div 
                 className="flex items-center gap-2 mb-8 cursor-pointer group"
                 onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
@@ -968,7 +966,7 @@ export default function App() {
                 <div className="w-8 h-8 bg-accent rounded-sm flex items-center justify-center text-paper font-bold group-hover:bg-ink transition-colors">V</div>
                 <span className="font-serif text-xl font-bold tracking-tight uppercase group-hover:text-accent transition-colors">Visão Sistémica</span>
               </div>
-              <p className="text-sm text-muted leading-relaxed mb-8">
+              <p className="text-sm text-muted leading-relaxed mb-8 max-w-xs">
                 Uma análise profunda sobre as forças invisíveis que governam as nossas dinâmicas relacionais.
               </p>
               <div className="flex gap-4">
