@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { AlertCircle, Zap, CloudRain } from 'lucide-react';
 import { SectionHeader } from '../SectionHeader';
 import { Reveal } from '../Reveal';
 
-export const Vergonha = () => (
+export const Vergonha = memo(() => (
   <section id="vergonha" className="section-padding bg-paper">
     <div className="max-w-7xl mx-auto">
       <SectionHeader 
@@ -33,7 +33,7 @@ export const Vergonha = () => (
                 <div key={item.title} className="flex flex-col items-center p-4 sm:p-6 rounded-2xl bg-paper/50">
                   <div className="text-pink-500 mb-3 sm:mb-4">{item.icon}</div>
                   <h4 className="font-bold mb-1 sm:mb-2 text-sm sm:text-base">{item.title}</h4>
-                  <p className="text-[10px] sm:text-xs text-muted leading-relaxed">{item.desc}</p>
+                  <p className="text-xs sm:text-sm text-muted leading-relaxed">{item.desc}</p>
                 </div>
               ))}
             </div>
@@ -42,4 +42,6 @@ export const Vergonha = () => (
       </Reveal>
     </div>
   </section>
-);
+));
+
+Vergonha.displayName = 'Vergonha';

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { motion } from 'motion/react';
 
 interface RevealProps {
@@ -10,7 +10,7 @@ interface RevealProps {
   key?: string | number;
 }
 
-export const Reveal = ({ children, delay = 0, x = 0, y = 20, className }: RevealProps) => (
+export const Reveal = memo(({ children, delay = 0, x = 0, y = 20, className }: RevealProps) => (
   <motion.div
     initial={{ opacity: 0, x, y }}
     whileInView={{ opacity: 1, x: 0, y: 0 }}
@@ -20,4 +20,6 @@ export const Reveal = ({ children, delay = 0, x = 0, y = 20, className }: Reveal
   >
     {children}
   </motion.div>
-);
+));
+
+Reveal.displayName = 'Reveal';

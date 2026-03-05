@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { motion } from 'motion/react';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
@@ -12,7 +12,7 @@ interface CardProps {
   className?: string;
 }
 
-export const Card: React.FC<CardProps> = ({ children, className }) => (
+export const Card: React.FC<CardProps> = memo(({ children, className }) => (
   <motion.div 
     initial={{ opacity: 0, y: 20 }}
     whileInView={{ opacity: 1, y: 0 }}
@@ -21,4 +21,6 @@ export const Card: React.FC<CardProps> = ({ children, className }) => (
   >
     {children}
   </motion.div>
-);
+));
+
+Card.displayName = 'Card';

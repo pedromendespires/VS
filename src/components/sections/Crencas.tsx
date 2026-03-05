@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { SectionHeader } from '../SectionHeader';
 import { Reveal } from '../Reveal';
 import { clsx, type ClassValue } from 'clsx';
@@ -8,7 +8,7 @@ function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export const Crencas = () => (
+export const Crencas = memo(() => (
   <section id="crencas" className="section-padding bg-white">
     <div className="max-w-7xl mx-auto">
       <SectionHeader 
@@ -34,4 +34,6 @@ export const Crencas = () => (
       </div>
     </div>
   </section>
-);
+));
+
+Crencas.displayName = 'Crencas';

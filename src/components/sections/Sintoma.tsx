@@ -1,11 +1,11 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { Shield, Ghost, ChevronRight } from 'lucide-react';
 import { SectionHeader } from '../SectionHeader';
 import { Card } from '../Card';
 import { Reveal } from '../Reveal';
 
-export const Sintoma = () => (
-  <section id="irresponsabilidade" className="pt-8 pb-32 px-6 md:px-12 lg:px-24 bg-white">
+export const Sintoma = memo(() => (
+  <section id="irresponsabilidade" className="section-padding bg-white">
     <div className="max-w-7xl mx-auto">
       <SectionHeader 
         subtitle="O Ponto de Partida"
@@ -52,4 +52,6 @@ export const Sintoma = () => (
       </div>
     </div>
   </section>
-);
+));
+
+Sintoma.displayName = 'Sintoma';

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { Instagram, Facebook, Linkedin, Send, CheckCircle2 } from 'lucide-react';
 
 interface FooterProps {
@@ -6,7 +6,7 @@ interface FooterProps {
   handleNewsletterSubmit: (e: React.FormEvent) => void;
 }
 
-export const Footer = ({ newsletterStatus, handleNewsletterSubmit }: FooterProps) => (
+export const Footer = memo(({ newsletterStatus, handleNewsletterSubmit }: FooterProps) => (
   <footer className="bg-paper border-t border-ink/5 pt-20 pb-10">
     <div className="max-w-7xl mx-auto px-6">
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-20">
@@ -68,4 +68,6 @@ export const Footer = ({ newsletterStatus, handleNewsletterSubmit }: FooterProps
       </div>
     </div>
   </footer>
-);
+));
+
+Footer.displayName = 'Footer';

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, memo } from 'react';
 import { motion, AnimatePresence, LayoutGroup } from 'motion/react';
 import { ArrowRight } from 'lucide-react';
 import { SectionHeader } from '../SectionHeader';
@@ -11,7 +11,7 @@ function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export const Leis = () => {
+export const Leis = memo(() => {
   const [activeLaw, setActiveLaw] = useState<number | null>(null);
 
   return (
@@ -157,4 +157,6 @@ export const Leis = () => {
       </div>
     </section>
   );
-};
+});
+
+Leis.displayName = 'Leis';

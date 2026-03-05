@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { motion } from 'motion/react';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
@@ -13,7 +13,7 @@ interface SectionHeaderProps {
   accent?: string;
 }
 
-export const SectionHeader = ({ title, subtitle, accent }: SectionHeaderProps) => (
+export const SectionHeader = memo(({ title, subtitle, accent }: SectionHeaderProps) => (
   <div className="max-w-3xl mb-12 md:mb-24">
     <motion.div 
       initial={{ opacity: 0, x: -20 }}
@@ -33,4 +33,6 @@ export const SectionHeader = ({ title, subtitle, accent }: SectionHeaderProps) =
       {title}
     </motion.h2>
   </div>
-);
+));
+
+SectionHeader.displayName = 'SectionHeader';

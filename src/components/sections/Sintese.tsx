@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { memo } from 'react';
 import { motion } from 'motion/react';
 import { ArrowRight, Shield, Zap, Ghost } from 'lucide-react';
 import { Reveal } from '../Reveal';
@@ -9,7 +9,7 @@ function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export const Sintese = () => (
+export const Sintese = memo(() => (
   <section id="sintese" className="section-padding bg-ink text-paper relative overflow-hidden">
     {/* Animated Background Flow */}
     <div className="absolute inset-0 opacity-5 pointer-events-none">
@@ -91,4 +91,6 @@ export const Sintese = () => (
       </div>
     </div>
   </section>
-);
+));
+
+Sintese.displayName = 'Sintese';
