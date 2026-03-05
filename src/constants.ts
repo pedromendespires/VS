@@ -62,14 +62,14 @@ export const TESTIMONIALS_DATA = [
   },
   { 
     name: "João Pereira", 
-    role: "Arquiteto", 
+    role: "Arquitecto", 
     text: "A minha relação com o meu pai era um campo de batalha. Através da visão sistémica, deixei de ser o juiz dele para ser apenas o filho. Essa mudança devolveu-me a paz e a força que me faltavam.",
     stars: 5
   },
   { 
     name: "Ana Costa", 
     role: "Psicóloga", 
-    text: "Trabalho com pessoas há anos, mas esta abordagem trouxe-me a clareza que faltava. É ir direto à alma do problema, sem rodeios, mas com uma compaixão profunda por tudo o que foi.",
+    text: "Trabalho com pessoas há anos, mas esta abordagem trouxe-me a clareza que faltava. É ir directo à alma do problema, sem rodeios, mas com uma compaixão profunda por tudo o que foi.",
     stars: 5
   }
 ];
