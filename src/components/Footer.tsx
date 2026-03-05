@@ -16,7 +16,7 @@ export const Footer = ({ newsletterStatus, handleNewsletterSubmit }: FooterProps
             <span className="font-serif text-2xl font-bold tracking-tighter">Visão Sistémica</span>
           </div>
           <p className="text-muted max-w-md mb-8 leading-relaxed">
-            Acompanhamos pessoas e sistemas na descoberta da sua ordem natural, promovendo a cura através do reconhecimento e da inclusão de tudo o que foi.
+            Criamos um espaço onde pessoas e sistemas podem regressar à sua ordem natural, onde cada história é vista, honrada e integrada — e onde a cura pode finalmente florescer.
           </p>
           <div className="flex gap-4">
             {[Instagram, Facebook, Linkedin].map((Icon, i) => (
@@ -29,7 +29,7 @@ export const Footer = ({ newsletterStatus, handleNewsletterSubmit }: FooterProps
         
         <div>
           <h4 className="font-bold mb-8 uppercase tracking-widest text-xs">Newsletter</h4>
-          <p className="text-sm text-muted mb-6">Receba reflexões sistémicas e novidades sobre workshops.</p>
+          <p className="text-sm text-muted mb-6">Receba reflexões sistémicas e descubra novidades sobre o caminho das Constelações Familiares.</p>
           <form onSubmit={handleNewsletterSubmit} className="relative">
             <input 
               type="email" 
@@ -53,7 +53,7 @@ export const Footer = ({ newsletterStatus, handleNewsletterSubmit }: FooterProps
           <h4 className="font-bold mb-8 uppercase tracking-widest text-xs">Contacto</h4>
           <ul className="space-y-4 text-sm text-muted">
             <li>Lisboa, Portugal</li>
-            <li>geral@visaosistemica.pt</li>
+            <li>Welcome@Luis-Trindade.com</li>
             <li>+351 912 345 678</li>
           </ul>
         </div>
