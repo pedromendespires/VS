@@ -416,15 +416,6 @@ export default function App() {
           </motion.div>
         </div>
 
-        {/* Scroll Indicator */}
-        <motion.div 
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 4, duration: 1 }}
-          className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3"
-        >
-          <div className="w-[1px] h-12 bg-gradient-to-b from-accent/40 to-transparent" />
-        </motion.div>
       </header>
 
       {/* 1. Sintoma */}
