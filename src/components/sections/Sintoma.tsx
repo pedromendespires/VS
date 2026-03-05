@@ -5,7 +5,7 @@ import { Card } from '../Card';
 import { Reveal } from '../Reveal';
 
 export const Sintoma = () => (
-  <section id="irresponsabilidade" className="section-padding bg-white">
+  <section id="irresponsabilidade" className="pt-16 pb-32 px-6 md:px-12 lg:px-24 bg-white">
     <div className="max-w-7xl mx-auto">
       <SectionHeader 
         subtitle="O Ponto de Partida"

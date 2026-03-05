@@ -16,7 +16,7 @@ export const Hero = () => {
   const heroScale = useTransform(heroProgress, [0, 1], [1, 1.1]);
 
   return (
-    <header ref={heroRef} className="relative min-h-screen flex items-center justify-center overflow-hidden bg-[#f5f2ed] py-20">
+    <header ref={heroRef} className="relative min-h-screen flex items-center justify-center overflow-hidden bg-[#f5f2ed] pt-20 pb-12">
       <motion.div 
         className="absolute inset-0 z-0"
         style={{ y: heroY, opacity: heroOpacity, scale: heroScale }}
@@ -37,7 +37,7 @@ export const Hero = () => {
         
         <motion.div style={{ y: heroSubtextY }}>
           <Reveal delay={2.8}>
-            <p className="text-lg sm:text-xl md:text-3xl text-muted max-w-3xl mx-auto mb-10 md:mb-20 font-light leading-relaxed">
+            <p className="text-lg sm:text-xl md:text-3xl text-muted max-w-3xl mx-auto mb-0 font-light leading-relaxed">
               O lugar onde a sua história ganha sentido. Descubra as forças invisíveis que moldam o seu caminho e recupere a liberdade de ser quem é.
             </p>
           </Reveal>
