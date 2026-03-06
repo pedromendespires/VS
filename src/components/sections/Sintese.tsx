@@ -1,6 +1,6 @@
 import React, { memo } from 'react';
 import { motion } from 'motion/react';
-import { ArrowRight, Shield, Zap, Ghost } from 'lucide-react';
+import { ArrowRight, Shield, Zap, UserMinus } from 'lucide-react';
 import { Reveal } from '../Reveal';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
@@ -76,7 +76,7 @@ export const Sintese = memo(() => (
             law: "Isolamento", 
             desc: "...que se manifesta como isolamento na vida atual.",
             color: "border-pink-500/30 bg-pink-500/5",
-            icon: <Ghost className="text-pink-400 mb-4 md:mb-6" size={32} />
+            icon: <UserMinus className="text-pink-400 mb-4 md:mb-6" size={32} />
           }
         ].map((item, i) => (
           <Reveal key={item.law} delay={i * 0.2} y={40}>

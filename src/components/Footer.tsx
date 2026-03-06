@@ -54,7 +54,7 @@ export const Footer = memo(({ newsletterStatus, handleNewsletterSubmit }: Footer
           <ul className="space-y-4 text-sm text-muted">
             <li>Lisboa, Portugal</li>
             <li>Welcome@Luis-Trindade.com</li>
-            <li>+351 912 345 678</li>
+            <li>+351 919 398 776</li>
           </ul>
         </div>
       </div>

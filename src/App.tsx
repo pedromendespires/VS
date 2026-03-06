@@ -177,7 +177,7 @@ export default function App() {
       
       {/* Floating Contact Button */}
       <motion.a
-        href="https://wa.me/351912345678"
+        href="https://wa.me/351919398776"
         target="_blank"
         rel="noopener noreferrer"
         aria-label="Contactar via WhatsApp"
